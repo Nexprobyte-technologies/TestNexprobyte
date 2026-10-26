@@ -1,0 +1,128 @@
+/* ================= ReactBits CSS Animations ================= */
+
+/* --- ShinyText (Luminous Sheen Sweep) --- */
+.shiny-text {
+  display: inline-block;
+  background: linear-gradient(
+    120deg,
+    rgba(18, 56, 95, 0.95) 0%,
+    rgba(18, 56, 95, 0.95) 35%,
+    rgba(8, 125, 193, 1) 50%,
+    rgba(240, 120, 22, 1) 58%,
+    rgba(18, 56, 95, 0.95) 70%,
+    rgba(18, 56, 95, 0.95) 100%
+  );
+  background-size: 250% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shinySweep 4s ease-in-out infinite;
+}
+
+.shiny-text-white {
+  background: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(255, 255, 255, 0.9) 35%,
+    rgba(165, 220, 255, 1) 50%,
+    rgba(255, 210, 160, 1) 58%,
+    rgba(255, 255, 255, 0.9) 70%,
+    rgba(255, 255, 255, 0.9) 100%
+  );
+  background-size: 250% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shinySweep 4s ease-in-out infinite;
+}
+
+@keyframes shinySweep {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
+}
+
+/* --- Spotlight Card --- */
+.spotlight-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 20px;
+  background: linear-gradient(180deg, #FFFFFF 0%, #F4F8FC 100%);
+  border: 1px solid rgba(18, 56, 95, 0.08);
+  box-shadow: 0 8px 30px rgba(18, 56, 95, 0.05);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease, border-color 0.35s ease;
+}
+
+.spotlight-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(8, 125, 193, 0.35);
+  box-shadow: 0 20px 48px rgba(8, 125, 193, 0.12), 0 0 0 1px rgba(8, 125, 193, 0.25);
+}
+
+.spotlight-card-spotlight {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 2;
+}
+
+.spotlight-card:hover .spotlight-card-spotlight {
+  opacity: 1;
+}
+
+.spotlight-card-content {
+  position: relative;
+  z-index: 3;
+}
+
+/* --- Magnetic Element Wrapper --- */
+.magnetic-wrap {
+  display: inline-flex;
+  position: relative;
+  will-change: transform;
+}
+
+/* --- StarBorder / Border Trail --- */
+.border-trail-container {
+  position: relative;
+  overflow: hidden;
+  border-radius: inherit;
+}
+
+.border-trail-beam {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  filter: blur(8px);
+  background: radial-gradient(circle, rgba(8, 125, 193, 0.8) 0%, rgba(240, 120, 22, 0.8) 50%, transparent 80%);
+  pointer-events: none;
+  z-index: 1;
+  animation: borderTrailSpin 6s linear infinite;
+}
+
+@keyframes borderTrailSpin {
+  0% {
+    top: -40px;
+    left: -40px;
+  }
+  25% {
+    top: -40px;
+    left: calc(100% - 40px);
+  }
+  50% {
+    top: calc(100% - 40px);
+    left: calc(100% - 40px);
+  }
+  75% {
+    top: calc(100% - 40px);
+    left: -40px;
+  }
+  100% {
+    top: -40px;
+    left: -40px;
+  }
+}

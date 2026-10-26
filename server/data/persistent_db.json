@@ -1,0 +1,585 @@
+{
+  "quotations": [],
+  "expenses": [
+    {
+      "_id": "exp-1",
+      "date": "2026-10-23",
+      "category": "Travel",
+      "to": "Priya Sharma",
+      "reason": "Client site visit - Apex Capital",
+      "amount": 1250,
+      "type": "Office",
+      "note": "Cab fare to client location",
+      "recordedByName": "NexAdmin",
+      "createdAt": "2026-10-23T07:27:46.418Z"
+    },
+    {
+      "_id": "exp-2",
+      "date": "2026-10-22",
+      "category": "Salary",
+      "to": "Monthly Payroll",
+      "reason": "August salary for team",
+      "amount": 125000,
+      "type": "Salary",
+      "note": "",
+      "recordedByName": "NexAdmin",
+      "createdAt": "2026-10-22T11:27:46.418Z"
+    }
+  ],
+  "inquiries": [
+    {
+      "_id": "inq-1792770093241",
+      "name": "ABCD",
+      "email": "abcd@gmail.com",
+      "phone": "9876543210",
+      "organization": "Company",
+      "service": "New website",
+      "message": "5555 (Organization: Company)",
+      "status": "New",
+      "createdAt": "2026-10-23T15:41:33.241Z"
+    },
+    {
+      "_id": "inq-1",
+      "name": "Rajesh Kumar",
+      "email": "rajesh@techcorp.com",
+      "phone": "+91 98765 43210",
+      "service": "Website Development",
+      "message": "Looking for an e-commerce platform build with custom WooCommerce & payment gateway.",
+      "status": "New",
+      "createdAt": "2026-10-23T06:27:46.418Z"
+    },
+    {
+      "_id": "inq-2",
+      "name": "Ananya Sharma",
+      "email": "ananya@growthlabs.io",
+      "phone": "+91 91234 56789",
+      "service": "Digital Marketing",
+      "message": "Need performance marketing and Meta/Google Ads campaign optimization.",
+      "status": "In Progress",
+      "createdAt": "2026-10-22T11:27:46.418Z"
+    }
+  ],
+  "applications": [
+    {
+      "_id": "app-1792769807968",
+      "jobId": "frontend-dev",
+      "jobTitle": "Frontend Engineer",
+      "name": "Pooja Sundaram",
+      "email": "pooja@example.com",
+      "phone": "9876543210",
+      "experience": "2 Years",
+      "portfolioUrl": "https://pooja.dev",
+      "linkedinUrl": "",
+      "coverLetter": "",
+      "resumeFileName": "resume.pdf",
+      "resumeData": "",
+      "resumeSize": "",
+      "status": "New",
+      "createdAt": "2026-10-23T15:36:47.968Z"
+    },
+    {
+      "_id": "app-1",
+      "jobId": "frontend-developer",
+      "jobTitle": "Frontend Developer",
+      "name": "Karthik Raja",
+      "email": "karthik.dev@gmail.com",
+      "phone": "+91 99887 76655",
+      "experience": "3 – 5 Years (Mid – Senior)",
+      "portfolioUrl": "https://github.com/karthik-dev",
+      "linkedinUrl": "https://linkedin.com/in/karthik",
+      "coverLetter": "Passionate React frontend engineer with 3 years of production experience in high-performance web applications.",
+      "resumeFileName": "Karthik_Raja_Resume.pdf",
+      "resumeData": "",
+      "resumeSize": "1.2 MB",
+      "status": "New",
+      "createdAt": "2026-10-23T09:27:46.418Z"
+    }
+  ],
+  "jobs": [
+    {
+      "id": "job-1",
+      "_id": "job-1",
+      "slug": "frontend-developer",
+      "title": "Frontend Developer",
+      "dept": "Engineering",
+      "location": "Coimbatore / Remote",
+      "type": "Full-time",
+      "salary": "₹3L – ₹6L / year",
+      "palette": "cobalt",
+      "excerpt": "Turn beautiful designs into fast, accessible interfaces using React and modern CSS.",
+      "responsibilities": [
+        "Build responsive UI with React, Next.js and modern CSS",
+        "Optimise Core Web Vitals and page performance",
+        "Collaborate with designers and backend engineers"
+      ],
+      "requirements": [
+        "2+ years building production React applications",
+        "Strong HTML, CSS and JavaScript fundamentals"
+      ],
+      "active": true,
+      "createdAt": "2026-10-23T11:27:46.418Z"
+    },
+    {
+      "id": "job-2",
+      "_id": "job-2",
+      "slug": "fullstack-developer",
+      "title": "Full Stack Developer",
+      "dept": "Engineering",
+      "location": "Coimbatore / Remote",
+      "type": "Full-time",
+      "salary": "₹3.5L – ₹7L / year",
+      "palette": "mint",
+      "excerpt": "Build high-performance web applications, scalable REST APIs, and modern user interfaces using React, Node.js, and modern databases.",
+      "responsibilities": [
+        "Architect and build robust web applications end-to-end",
+        "Develop responsive frontends with React and scalable Node.js APIs",
+        "Design database schemas with PostgreSQL and MongoDB"
+      ],
+      "requirements": [
+        "2+ years experience in full-stack JavaScript / TypeScript development",
+        "Strong proficiency in React, Node.js, Express, and databases"
+      ],
+      "active": true,
+      "createdAt": "2026-10-23T11:27:46.418Z"
+    },
+    {
+      "id": "job-3",
+      "_id": "job-3",
+      "slug": "ui-ux-designer",
+      "title": "UI/UX Designer",
+      "dept": "Design",
+      "location": "Coimbatore",
+      "type": "Full-time",
+      "salary": "₹3L – ₹6.5L / year",
+      "palette": "berry",
+      "excerpt": "Design intuitive digital products, wireframes, and design systems for enterprise software.",
+      "responsibilities": [
+        "Conduct user research and create user flows",
+        "Design high-fidelity UI components in Figma"
+      ],
+      "requirements": [
+        "Strong portfolio demonstrating Web & App UX",
+        "Proficiency in Figma & prototyping tools"
+      ],
+      "active": true,
+      "createdAt": "2026-10-23T11:27:46.418Z"
+    }
+  ],
+  "posts": [
+    {
+      "_id": "post-1",
+      "slug": "why-every-business-needs-a-website-in-2026",
+      "title": "Why Every Business Still Needs a Website in 2026",
+      "category": "Web",
+      "date": "Aug 18, 2026",
+      "read": "5 min",
+      "palette": "cobalt",
+      "excerpt": "Social media borrows your audience; a website owns it. Here's why your own corner of the internet still matters more than ever.",
+      "image": "/images/cover-web.jpg",
+      "content": [
+        {
+          "h": "The audience you rent vs the one you own"
+        },
+        {
+          "p": "Social platforms are powerful — but they can change their algorithm, their pricing or their rules overnight. A website is the one place where you control the experience, the content and the relationship. It's the home base every other channel points back to."
+        },
+        {
+          "h": "Credibility is decided in 5 seconds"
+        },
+        {
+          "p": "Before a customer buys, they check. A fast, clean and professional website tells them you're a serious business. In 2026 that first impression still happens on a company's own domain more than anywhere else."
+        }
+      ],
+      "author": "Nexprobyte Team",
+      "published": true,
+      "views": 342,
+      "createdAt": "2026-10-23T11:27:46.418Z"
+    },
+    {
+      "_id": "post-2",
+      "slug": "digital-marketing-that-actually-works-for-smes",
+      "title": "Digital Marketing That Actually Works for SMEs",
+      "category": "Marketing",
+      "date": "Jul 12, 2026",
+      "read": "4 min",
+      "palette": "mint",
+      "excerpt": "Forget vanity metrics. Here is the pragmatic playbook for small-to-mid companies wanting real revenue growth.",
+      "image": "/images/cover-marketing.jpg",
+      "content": [
+        {
+          "h": "Focus on bottom-of-funnel first"
+        },
+        {
+          "p": "Don't spend your budget building awareness before your conversion mechanism is watertight. Start with search intent, high-converting landing pages, and lead follow-up automation."
+        }
+      ],
+      "author": "Nexprobyte Team",
+      "published": true,
+      "views": 215,
+      "createdAt": "2026-10-23T11:27:46.418Z"
+    },
+    {
+      "_id": "post-3",
+      "slug": "how-to-choose-the-right-digital-agency",
+      "title": "How to Choose the Right Digital Agency in India",
+      "category": "Business",
+      "date": "May 29, 2026",
+      "read": "6 min",
+      "palette": "ink",
+      "excerpt": "Before you hire an agency, you should know what to look for — and what to avoid. A practical guide for first-time buyers.",
+      "image": "/images/cover-business.jpg",
+      "content": [
+        {
+          "h": "Look for process, not promises"
+        },
+        {
+          "p": "Avoid agencies that guarantee number one on Google or 10x sales overnight. The good ones talk about process: research, build, test, measure, improve."
+        }
+      ],
+      "author": "Nexprobyte Team",
+      "published": true,
+      "views": 189,
+      "createdAt": "2026-10-23T11:27:46.418Z"
+    }
+  ],
+  "about": {
+    "eyebrow": "WHO WE ARE",
+    "title": "We Build Digital Products That Scale",
+    "subtitle": "Nexprobyte Technologies is a digital agency based in Coimbatore, India. We combine technical rigor, thoughtful UI design, and data-driven marketing to help businesses grow.",
+    "story": "Founded with a vision to deliver enterprise-grade digital experiences for ambitious companies, Nexprobyte brings together engineering excellence and design precision.",
+    "mission": "To empower businesses with technology solutions that generate measurable revenue, elevate brand presence, and scale seamlessly.",
+    "vision": "To be the premier digital transformation partner for startups, SMEs, and global enterprises.",
+    "stats": [
+      {
+        "label": "Projects Completed",
+        "value": "120+"
+      },
+      {
+        "label": "Client Satisfaction",
+        "value": "99%"
+      },
+      {
+        "label": "Team Specialists",
+        "value": "25+"
+      },
+      {
+        "label": "Years Experience",
+        "value": "6+"
+      }
+    ],
+    "values": [
+      {
+        "title": "Engineering Excellence",
+        "description": "Clean code, robust architecture, and speed optimization in every project."
+      },
+      {
+        "title": "Client First",
+        "description": "Transparent communication, agile delivery, and long-term care plans."
+      }
+    ]
+  },
+  "employees": [
+    {
+      "_id": "emp-101",
+      "empId": "NEX-101",
+      "name": "Priya Sharma",
+      "email": "priya@nexprobyte.com",
+      "password": "Password@123",
+      "phone": "+91 98765 43211",
+      "department": "Engineering",
+      "designation": "Senior Frontend Engineer",
+      "joiningDate": "2025-06-15",
+      "status": "Confirmed",
+      "role": "employee",
+      "avatar": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80",
+      "leaveBalance": {
+        "casual": 12,
+        "sick": 8,
+        "paid": 10
+      },
+      "createdAt": "2026-08-24T11:27:46.418Z"
+    },
+    {
+      "_id": "emp-102",
+      "empId": "NEX-102",
+      "name": "Dinesh Kumar",
+      "email": "dinesh@nexprobyte.com",
+      "password": "",
+      "phone": "+91 91234 56780",
+      "department": "Design",
+      "designation": "UI/UX Designer",
+      "joiningDate": "2026-02-01",
+      "status": "Pending",
+      "role": "employee",
+      "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80",
+      "leaveBalance": {
+        "casual": 12,
+        "sick": 8,
+        "paid": 10
+      },
+      "createdAt": "2026-10-18T11:27:46.418Z"
+    },
+    {
+      "_id": "emp-103",
+      "empId": "NEX-103",
+      "name": "Ramesh Venkat",
+      "email": "ramesh@nexprobyte.com",
+      "password": "Password@123",
+      "phone": "+91 97890 12345",
+      "department": "Marketing",
+      "designation": "SEO & Growth Specialist",
+      "joiningDate": "2025-10-10",
+      "status": "Confirmed",
+      "role": "employee",
+      "avatar": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80",
+      "leaveBalance": {
+        "casual": 10,
+        "sick": 7,
+        "paid": 8
+      },
+      "createdAt": "2026-09-23T11:27:46.418Z"
+    }
+  ],
+  "attendance": [
+    {
+      "_id": "att-1",
+      "employeeId": "NEX-101",
+      "employeeName": "Priya Sharma",
+      "date": "2026-10-23",
+      "clockIn": "09:05 AM",
+      "clockOut": "",
+      "totalHours": "Working...",
+      "status": "Present",
+      "notes": "On-time check-in via office network",
+      "createdAt": "2026-10-23T11:27:46.418Z"
+    },
+    {
+      "_id": "att-2",
+      "employeeId": "NEX-101",
+      "employeeName": "Priya Sharma",
+      "date": "2026-10-22",
+      "clockIn": "09:00 AM",
+      "clockOut": "06:15 PM",
+      "totalHours": "9h 15m",
+      "status": "Present",
+      "notes": "Completed daily sprints and reviews",
+      "createdAt": "2026-10-22T11:27:46.418Z"
+    },
+    {
+      "_id": "att-3",
+      "employeeId": "NEX-103",
+      "employeeName": "Ramesh Venkat",
+      "date": "2026-10-23",
+      "clockIn": "09:40 AM",
+      "clockOut": "",
+      "totalHours": "Working...",
+      "status": "Late",
+      "notes": "Traffic delay on Avinashi road",
+      "createdAt": "2026-10-23T11:27:46.418Z"
+    }
+  ],
+  "workReports": [
+    {
+      "_id": "wr-1",
+      "employeeId": "NEX-101",
+      "employeeName": "Priya Sharma",
+      "date": "2026-10-23",
+      "projectTitle": "Nexprobyte Motion Redesign",
+      "hoursSpent": 7.5,
+      "taskDetails": "Built responsive navbar with GSAP scroll triggers and integrated dark/light theme mode.",
+      "blockers": "None",
+      "status": "Completed",
+      "link": "https://github.com/nexprobyte/frontend",
+      "createdAt": "2026-10-23T11:27:46.418Z"
+    },
+    {
+      "_id": "wr-2",
+      "employeeId": "NEX-101",
+      "employeeName": "Priya Sharma",
+      "date": "2026-10-22",
+      "projectTitle": "CRM Client Portal",
+      "hoursSpent": 8,
+      "taskDetails": "Integrated REST APIs for Inquiry Management and Career job board filtering.",
+      "blockers": "Waiting on client API endpoints for payment gateway.",
+      "status": "In Progress",
+      "link": "https://figma.com/file/crm-preview",
+      "createdAt": "2026-10-22T11:27:46.418Z"
+    }
+  ],
+  "leaves": [
+    {
+      "_id": "lv-1",
+      "employeeId": "NEX-101",
+      "employeeName": "Priya Sharma",
+      "leaveType": "Casual Leave",
+      "fromDate": "2026-10-26",
+      "toDate": "2026-10-27",
+      "days": 2,
+      "reason": "Family function in hometown",
+      "status": "Pending",
+      "adminRemark": "",
+      "createdAt": "2026-10-23T11:27:46.418Z"
+    }
+  ],
+  "interviewData": [
+    {
+      "_id": "ivw-1",
+      "name": "Priya Venkatesh",
+      "dob": "1999-04-12",
+      "email": "priya.venkatesh@gmail.com",
+      "address": "12 Gandhi Street, Coimbatore, Tamil Nadu",
+      "experienceType": "Experienced",
+      "experienceYears": "3 Years",
+      "resumeFileName": "Priya_Venkatesh_Resume.pdf",
+      "resumeData": "",
+      "resumeSize": "1.1 MB",
+      "status": "Joined",
+      "onboarding": {
+        "contactPhone": "+91 98765 12345",
+        "address": "12 Gandhi Street, Coimbatore, Tamil Nadu",
+        "bloodGroup": "B+",
+        "college": "PSG College of Technology",
+        "bankName": "State Bank of India",
+        "bankAccountNumber": "3021 4567 8901",
+        "bankIFSC": "SBIN0001234",
+        "profileImageName": "priya.jpg",
+        "profileImageData": "",
+        "aadharFileName": "Priya_Aadhar.pdf",
+        "aadharFileData": "",
+        "aadharFileSize": "0.8 MB",
+        "panFileName": "Priya_PAN.pdf",
+        "panFileData": "",
+        "panFileSize": "0.5 MB",
+        "experienceCertFileName": "Priya_ExpCert.pdf",
+        "experienceCertFileData": "",
+        "experienceCertFileSize": "0.9 MB",
+        "otherCertFileName": "",
+        "otherCertFileData": "",
+        "otherCertFileSize": ""
+      },
+      "createdAt": "2026-10-23T08:27:46.419Z"
+    },
+    {
+      "_id": "ivw-2",
+      "name": "Arun Kumar",
+      "dob": "2001-09-23",
+      "email": "arun.kumar22@gmail.com",
+      "address": "8 Anna Nagar, Coimbatore, Tamil Nadu",
+      "experienceType": "Fresher",
+      "experienceYears": "0 Years",
+      "resumeFileName": "Arun_Kumar_Fresher_Resume.pdf",
+      "resumeData": "",
+      "resumeSize": "0.9 MB",
+      "status": "New",
+      "createdAt": "2026-10-22T09:27:46.419Z"
+    }
+  ],
+  "projects": [
+    {
+      "_id": "prj-1",
+      "projectId": "PRJ-101",
+      "title": "Nexprobyte Motion Redesign",
+      "clientName": "Nexprobyte Internal",
+      "clientEmail": "admin@nexprobyte.com",
+      "category": "Web Development",
+      "description": "Complete modern redesign of Nexprobyte official platform with GSAP animations, dynamic CRM, and responsive UI.",
+      "assignedEmployees": [
+        {
+          "empId": "NEX-101",
+          "name": "Priya Sharma",
+          "role": "Frontend Lead"
+        },
+        {
+          "empId": "NEX-102",
+          "name": "Rahul Verma",
+          "role": "UI/UX Designer"
+        }
+      ],
+      "startDate": "2026-08-15",
+      "deadline": "2026-09-25",
+      "budget": "₹3,50,000",
+      "priority": "High",
+      "status": "In Progress",
+      "progress": 75,
+      "techStack": [
+        "React",
+        "Vite",
+        "GSAP",
+        "Node.js",
+        "Express"
+      ],
+      "deliverablesUrl": "https://github.com/nexprobyte/frontend",
+      "notes": "Sprint 3 deliverables in review. On track for launch.",
+      "createdAt": "2026-10-03T11:27:46.419Z"
+    },
+    {
+      "_id": "prj-2",
+      "projectId": "PRJ-102",
+      "title": "FinTech Mobile Banking Suite",
+      "clientName": "Apex Capital Bank",
+      "clientEmail": "ops@apexcapital.in",
+      "category": "Mobile App",
+      "description": "Secure cross-platform banking application with biometric authentication, UPI payments, and portfolio tracking.",
+      "assignedEmployees": [
+        {
+          "empId": "NEX-103",
+          "name": "Dinesh Kumar",
+          "role": "Backend Engineer"
+        },
+        {
+          "empId": "NEX-101",
+          "name": "Priya Sharma",
+          "role": "React Native Dev"
+        }
+      ],
+      "startDate": "2026-07-01",
+      "deadline": "2026-10-15",
+      "budget": "₹8,00,000",
+      "priority": "Critical",
+      "status": "In Progress",
+      "progress": 55,
+      "techStack": [
+        "React Native",
+        "TypeScript",
+        "Node.js",
+        "PostgreSQL",
+        "Redis"
+      ],
+      "deliverablesUrl": "https://staging.apexcapital-dev.com",
+      "notes": "Payment gateway integration underway with NPCI sandbox.",
+      "createdAt": "2026-09-08T11:27:46.419Z"
+    },
+    {
+      "_id": "prj-3",
+      "projectId": "PRJ-103",
+      "title": "AI Customer Support Agent",
+      "clientName": "Global Commerce Ltd",
+      "clientEmail": "contact@globalcommerce.com",
+      "category": "AI / ML",
+      "description": "Multi-channel automated conversational AI assistant with sentiment analysis and CRM ticketing integration.",
+      "assignedEmployees": [
+        {
+          "empId": "NEX-101",
+          "name": "Priya Sharma",
+          "role": "AI Integrations"
+        }
+      ],
+      "startDate": "2026-08-01",
+      "deadline": "2026-09-10",
+      "budget": "₹4,50,000",
+      "priority": "Medium",
+      "status": "Completed",
+      "progress": 100,
+      "techStack": [
+        "Python",
+        "FastAPI",
+        "OpenAI API",
+        "React",
+        "Docker"
+      ],
+      "deliverablesUrl": "https://ai.globalcommerce.com",
+      "notes": "Successfully deployed to production and handed over to client.",
+      "createdAt": "2026-09-18T11:27:46.419Z"
+    }
+  ]
+}

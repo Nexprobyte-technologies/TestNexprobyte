@@ -47,7 +47,6 @@ function DeferredExtras() {
       <GSAPScrollEngine />
       <Nexi />
       <CallButton />
-      <Cursor />
     </Suspense>
   );
 }

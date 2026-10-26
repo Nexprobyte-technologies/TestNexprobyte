@@ -92,11 +92,11 @@ export default function JobDetail() {
               textAlign: "center",
             }}
           >
-            <div style={{ fontSize: "56px" }}>
-              {j.title.toLowerCase().includes("frontend") || j.title.toLowerCase().includes("react") ? "⚛️" :
-               j.title.toLowerCase().includes("wordpress") ? "🌐" :
-               j.title.toLowerCase().includes("design") || j.title.toLowerCase().includes("ui") ? "🎨" :
-               j.title.toLowerCase().includes("full stack") || j.title.toLowerCase().includes("node") ? "⚡" : "💼"}
+            <div style={{ display: "inline-flex", justifyContent: "center", alignItems: "center", width: "64px", height: "64px", borderRadius: "16px", background: "rgba(255,255,255,0.15)", margin: "0 auto" }}>
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2">
+                <rect width="20" height="14" x="2" y="7" rx="2" ry="2"/>
+                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+              </svg>
             </div>
             <h2 style={{ fontSize: "28px", fontWeight: 800, color: "#fff", margin: 0 }}>
               {j.title}
@@ -113,7 +113,7 @@ export default function JobDetail() {
         <div className="detail-cols" style={{ paddingTop: 64 }}>
           <div>
             <div className="eyebrow">
-              <span className="num">01</span>
+              <span className="eyebrow-spark">✦</span>
               <span>What you'll do</span>
             </div>
             <ul className="check-list">
@@ -132,7 +132,7 @@ export default function JobDetail() {
           </div>
           <div>
             <div className="eyebrow">
-              <span className="num">02</span>
+              <span className="eyebrow-spark">✦</span>
               <span>What we look for</span>
             </div>
             <ul className="check-list">

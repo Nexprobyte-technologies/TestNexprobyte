@@ -2,14 +2,14 @@ import React, { useRef } from "react";
 import { motion } from "motion/react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { SectionHead, FadeIn } from "./Reveal.jsx";
-import ShapeGrid from "./ShapeGrid.jsx";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const SHOWCASE = [
   {
-    tag: "01",
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>
+    ),
     title: "SEO Services",
     line: "Rank where it",
     line2: "counts",
@@ -18,7 +18,9 @@ const SHOWCASE = [
     bullets: ["Technical SEO audits", "Keyword & content strategy", "Local SEO & link building"],
   },
   {
-    tag: "02",
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18" /><polyline points="17 6 23 6 23 12" /></svg>
+    ),
     title: "Digital Marketing",
     line: "Growth you can",
     line2: "measure",
@@ -27,7 +29,9 @@ const SHOWCASE = [
     bullets: ["Google & Meta ads", "Landing page funnels", "CRO & attribution"],
   },
   {
-    tag: "03",
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="3" width="20" height="14" rx="2" /><line x1="8" y1="21" x2="16" y2="21" /><line x1="12" y1="17" x2="12" y2="21" /></svg>
+    ),
     title: "Software & App Development",
     line: "Products that",
     line2: "scale",
@@ -36,7 +40,9 @@ const SHOWCASE = [
     bullets: ["Full-stack web apps", "iOS & Android", "Cloud & integrations"],
   },
   {
-    tag: "04",
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m12 19 7-7 3 3-7 7-3-3z" /><path d="m18 13-1.5-7.5L2 2l3.5 14.5L13 18l5-5z" /><path d="m2 2 7.586 7.586" /><circle cx="11" cy="11" r="2" /></svg>
+    ),
     title: "UI/UX Design",
     line: "Interfaces people",
     line2: "understand",
@@ -45,7 +51,9 @@ const SHOWCASE = [
     bullets: ["UX research & flows", "Design systems", "Prototyping & testing"],
   },
   {
-    tag: "05",
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" /></svg>
+    ),
     title: "n8n Automation",
     line: "Manual work,",
     line2: "automated",
@@ -54,7 +62,9 @@ const SHOWCASE = [
     bullets: ["Workflow automation", "App integrations (400+)", "AI-powered agent flows"],
   },
   {
-    tag: "06",
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z" /></svg>
+    ),
     title: "AI-Powered Solutions",
     line: "Smarter ways to",
     line2: "work",
@@ -109,46 +119,45 @@ export function ServicesShowcase() {
 
   return (
     <section className="section showcase-section" id="deep-services" ref={sectionRef}>
-      <div className="wrap">
-        <SectionHead num="05" label="Capabilities" title="What we do, in depth" />
-
-        <FadeIn className="showcase-intro">
-          <p>
-            Beyond strategy, we ship the exact disciplines most businesses need to grow online.
-            Pick any capability and we'll handle it end-to-end.
-          </p>
-        </FadeIn>
-      </div>
-
-      {/* World map band */}
-      <div className="world-band" ref={contentRef}>
-        <ShapeGrid
-          direction="right"
-          speed={0.5}
-          borderColor="rgba(255,255,255,0.07)"
-          squareSize={50}
-          hoverFillColor="rgba(255,255,255,0.03)"
-          shape="square"
-          className="world-map"
-        />
-        <div className="wrap">
-          <span className="world-caption eyebrow">
-            <span className="num">✦</span>
-            Trusted by businesses from Coimbatore to the world
-          </span>
+      {/* Compact Services Movement Band (height reduced, live continuous movement) */}
+      <div className="world-band services-movement-band" ref={contentRef}>
+        <div className="world-band-glow" />
+        <div className="services-movement-inner">
+          <div className="services-movement-track">
+            {[0, 1].map((setIdx) => (
+              <span className="services-movement-group" key={setIdx}>
+                {[
+                  "Website & Web App Development",
+                  "iOS & Android Mobile Applications",
+                  "Custom Enterprise ERP Systems",
+                  "Technical SEO & Search Visibility",
+                  "Performance Marketing & Ads",
+                  "UI/UX Product Design Systems",
+                  "n8n Workflow Automation",
+                  "AI Assistants & Copilots",
+                  "Cloud Infrastructure & DevOps",
+                ].map((item, i) => (
+                  <span className="services-movement-item" key={i}>
+                    <span className="srv-spark">✦</span>
+                    <span className="srv-name">{item}</span>
+                  </span>
+                ))}
+              </span>
+            ))}
+          </div>
         </div>
       </div>
 
       <div className="wrap showcase-list">
-        {SHOWCASE.map((s, i) => (
+        {SHOWCASE.map((s) => (
           <div className="showcase-row" key={s.title} data-show-row>
             <div className="showcase-media" data-parallax>
               <img src={s.img} alt={s.title} loading="lazy" />
-              <span className="showcase-index">{s.tag}</span>
+              <span className="showcase-index">{s.icon}</span>
             </div>
             <div className="showcase-text">
               <span className="eyebrow">
-                <span className="num">{s.tag}</span>
+                <span className="eyebrow-spark">✦</span>
                 <span>{s.title}</span>
               </span>
               <h3 className="showcase-title">

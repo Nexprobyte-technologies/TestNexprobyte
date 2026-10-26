@@ -1,7 +1,7 @@
 import express from "express";
 import { Job } from "../models/Job.js";
 import { verifyToken } from "../middleware/auth.js";
-import { getDbConnected, memoryStore } from "../store/memoryStore.js";
+import { getDbConnected, memoryStore, persistStore } from "../store/memoryStore.js";
 
 const router = express.Router();
 
@@ -73,6 +73,8 @@ router.post("/", verifyToken, async (req, res) => {
     createdAt: new Date().toISOString(),
   };
 
+  let savedJob = newJob;
+
   if (getDbConnected()) {
     try {
       // Check if slug already exists in Mongo
@@ -80,17 +82,16 @@ router.post("/", verifyToken, async (req, res) => {
       if (existing) {
         newJob.slug = `${newJob.slug}-${Date.now().toString().slice(-4)}`;
       }
-      const doc = await Job.create(newJob);
-      return res.status(201).json(doc);
+      savedJob = await Job.create(newJob);
     } catch (e) {
-      console.error("Job create error in PostgreSQL:", e);
-      memoryStore.jobs.unshift(newJob);
-      return res.status(201).json(newJob);
+      console.warn("Job create fallback in PostgreSQL:", e.message);
     }
   }
 
-  memoryStore.jobs.unshift(newJob);
-  return res.status(201).json(newJob);
+  if (!memoryStore.jobs) memoryStore.jobs = [];
+  memoryStore.jobs.unshift(savedJob || newJob);
+  persistStore();
+  return res.status(201).json(savedJob || newJob);
 });
 
 // Update Job (PUT /api/jobs/:id - Admin Protected)
@@ -106,15 +107,21 @@ router.put("/:id", verifyToken, async (req, res) => {
       } else {
         doc = await Job.findByIdAndUpdate(id, updates, { new: true });
       }
-      if (doc) return res.json(doc);
+      if (doc) {
+        const index = (memoryStore.jobs || []).findIndex((j) => j._id === id || j.id === id || j.slug === id);
+        if (index !== -1) memoryStore.jobs[index] = { ...memoryStore.jobs[index], ...updates };
+        persistStore();
+        return res.json(doc);
+      }
     } catch (e) {
-      console.error("Job update error in Mongo:", e);
+      console.warn("Job update error in DB:", e.message);
     }
   }
 
-  const index = memoryStore.jobs.findIndex((j) => j._id === id || j.id === id || j.slug === id);
+  const index = (memoryStore.jobs || []).findIndex((j) => j._id === id || j.id === id || j.slug === id);
   if (index !== -1) {
     memoryStore.jobs[index] = { ...memoryStore.jobs[index], ...updates };
+    persistStore();
     return res.json(memoryStore.jobs[index]);
   }
   return res.status(404).json({ message: "Job not found." });
@@ -131,13 +138,13 @@ router.delete("/:id", verifyToken, async (req, res) => {
       } else {
         await Job.findByIdAndDelete(id);
       }
-      return res.json({ message: "Job deleted." });
     } catch (e) {
-      console.error("Job delete error in Mongo:", e);
+      console.warn("Job delete error in DB:", e.message);
     }
   }
 
-  memoryStore.jobs = memoryStore.jobs.filter((j) => j._id !== id && j.id !== id && j.slug !== id);
+  memoryStore.jobs = (memoryStore.jobs || []).filter((j) => j._id !== id && j.id !== id && j.slug !== id);
+  persistStore();
   return res.json({ message: "Job deleted." });
 });
 

@@ -2,7 +2,7 @@ import express from "express";
 import nodemailer from "nodemailer";
 import { Inquiry } from "../models/Inquiry.js";
 import { verifyToken } from "../middleware/auth.js";
-import { getDbConnected, memoryStore } from "../store/memoryStore.js";
+import { getDbConnected, memoryStore, persistStore } from "../store/memoryStore.js";
 
 const router = express.Router();
 
@@ -78,12 +78,13 @@ router.post("/", async (req, res) => {
     try {
       createdDoc = await Inquiry.create(newInquiry);
     } catch (e) {
-      console.error("Inquiry create error:", e);
-      memoryStore.inquiries.unshift(newInquiry);
+      console.warn("Inquiry DB create fallback:", e.message);
     }
-  } else {
-    memoryStore.inquiries.unshift(newInquiry);
   }
+
+  if (!memoryStore.inquiries) memoryStore.inquiries = [];
+  memoryStore.inquiries.unshift(createdDoc || newInquiry);
+  persistStore();
 
   // Trigger async email dispatch
   sendInquiryEmail(createdDoc).catch((err) => console.error("Async email dispatch failed:", err));
@@ -96,12 +97,12 @@ router.get("/", verifyToken, async (req, res) => {
   if (getDbConnected()) {
     try {
       const docs = await Inquiry.find().sort({ createdAt: -1 });
-      return res.json(docs);
+      if (docs && docs.length > 0) return res.json(docs);
     } catch (e) {
       console.error(e);
     }
   }
-  return res.json(memoryStore.inquiries);
+  return res.json(memoryStore.inquiries || []);
 });
 
 // Update Inquiry Status (PUT /api/inquiries/:id - Admin Protected)
@@ -112,15 +113,21 @@ router.put("/:id", verifyToken, async (req, res) => {
   if (getDbConnected()) {
     try {
       const doc = await Inquiry.findByIdAndUpdate(id, { status }, { new: true });
-      return res.json(doc);
+      if (doc) {
+        const item = (memoryStore.inquiries || []).find((i) => i._id === id || i.id === id);
+        if (item) item.status = status;
+        persistStore();
+        return res.json(doc);
+      }
     } catch (e) {
       console.error(e);
     }
   }
 
-  const item = memoryStore.inquiries.find((i) => i._id === id || i.id === id);
+  const item = (memoryStore.inquiries || []).find((i) => i._id === id || i.id === id);
   if (item) {
     item.status = status;
+    persistStore();
     return res.json(item);
   }
   return res.status(404).json({ message: "Inquiry not found." });
@@ -133,13 +140,13 @@ router.delete("/:id", verifyToken, async (req, res) => {
   if (getDbConnected()) {
     try {
       await Inquiry.findByIdAndDelete(id);
-      return res.json({ message: "Deleted successfully." });
     } catch (e) {
       console.error(e);
     }
   }
 
-  memoryStore.inquiries = memoryStore.inquiries.filter((i) => i._id !== id && i.id !== id);
+  memoryStore.inquiries = (memoryStore.inquiries || []).filter((i) => i._id !== id && i.id !== id);
+  persistStore();
   return res.json({ message: "Deleted successfully." });
 });
 

@@ -1,6 +1,6 @@
 import express from "express";
 import { verifyToken } from "../middleware/auth.js";
-import { memoryStore, getDbConnected } from "../store/memoryStore.js";
+import { memoryStore, getDbConnected, persistStore } from "../store/memoryStore.js";
 import { About } from "../models/About.js";
 
 const router = express.Router();
@@ -33,13 +33,16 @@ router.put("/", verifyToken, async (req, res) => {
       } else {
         doc = await About.create(updates);
       }
+      memoryStore.about = { ...memoryStore.about, ...updates };
+      persistStore();
       return res.json(doc);
     } catch (e) {
-      console.error(e);
+      console.warn("About DB update fallback:", e.message);
     }
   }
 
   memoryStore.about = { ...memoryStore.about, ...updates };
+  persistStore();
   return res.json(memoryStore.about);
 });
 

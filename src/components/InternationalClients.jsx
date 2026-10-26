@@ -3,7 +3,7 @@ import { RevealText, FadeIn } from "./Reveal.jsx";
 
 export function InternationalClients() {
   return (
-    <section className="section international-section" id="global">
+    <section className="section wrap international-section" id="global">
       <div className="international-text">
         <FadeIn className="section-head">
           <span className="eyebrow">
@@ -46,7 +46,7 @@ export function InternationalClients() {
             <span className="gps-pulse"></span>
             <span className="gps-label">London</span>
           </div>
-          <div className="gps-dot" style={{ left: "64%", top: "36%" }}>
+          <div className="gps-dot gps-dot-qatar" style={{ left: "64%", top: "36%" }}>
             <span className="gps-pulse"></span>
             <span className="gps-label">Qatar</span>
           </div>

@@ -277,9 +277,38 @@ export default function Contact() {
 
           <div className="contact-info">
             {[
-              { k: "Visit", v: "1st Floor, Nanjiammal Complex, Above City Bakery, Maniyakarampalayam, Coimbatore, Tamil Nadu 641006", href: "https://maps.google.com/?q=10.9994017,76.9686834" },
-              { k: "Email", v: "info@nexprobyte.com", href: "mailto:info@nexprobyte.com" },
-              { k: "Phone", v: "+91 95000 42426", href: "tel:+919500042426" },
+              {
+                k: "Visit",
+                v: "1st Floor, Nanjiammal Complex, Above City Bakery, Maniyakarampalayam, Coimbatore, Tamil Nadu 641006",
+                href: "https://maps.google.com/?q=10.9994017,76.9686834",
+                icon: (
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M12 21s-6-5.373-6-10a6 6 0 0 1 12 0c0 4.627-6 10-6 10z" />
+                    <circle cx="12" cy="11" r="2" />
+                  </svg>
+                ),
+              },
+              {
+                k: "Email",
+                v: "info@nexprobyte.com",
+                href: "mailto:info@nexprobyte.com",
+                icon: (
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <rect width="20" height="16" x="2" y="4" rx="2" />
+                    <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                  </svg>
+                ),
+              },
+              {
+                k: "Phone",
+                v: "+91 95000 42426",
+                href: "tel:+919500042426",
+                icon: (
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+                  </svg>
+                ),
+              },
             ].map((c, i) => (
               <motion.a
                 key={c.k}
@@ -292,7 +321,7 @@ export default function Contact() {
                 viewport={{ once: true, amount: 0.25 }}
                 transition={{ duration: 0.7, delay: 0.08 * i, ease: EASE }}
               >
-                <span className="num">0{i + 1}</span>
+                <span className="contact-card-icon" aria-hidden="true">{c.icon}</span>
                 <div>
                   <h4>{c.k}</h4>
                   <p>{c.v}</p>

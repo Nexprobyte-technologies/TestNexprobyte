@@ -1,7 +1,7 @@
 import express from "express";
 import { Employee } from "../models/Employee.js";
 import { verifyToken } from "../middleware/auth.js";
-import { getDbConnected, memoryStore } from "../store/memoryStore.js";
+import { getDbConnected, memoryStore, persistStore } from "../store/memoryStore.js";
 
 const router = express.Router();
 
@@ -107,19 +107,20 @@ router.post("/", verifyToken, async (req, res) => {
     createdAt: new Date().toISOString(),
   };
 
-  try {
-    if (getDbConnected()) {
-      const created = await Employee.create(newEmp);
-      return res.status(201).json(created);
-    }
+  let savedEmp = newEmp;
 
-    if (!memoryStore.employees) memoryStore.employees = [];
-    memoryStore.employees.unshift(newEmp);
-    return res.status(201).json(newEmp);
-  } catch (err) {
-    console.error("Create employee error:", err);
-    return res.status(500).json({ message: "Failed to create employee", error: err.message });
+  if (getDbConnected()) {
+    try {
+      savedEmp = await Employee.create(newEmp);
+    } catch (err) {
+      console.warn("Create employee DB fallback:", err.message);
+    }
   }
+
+  if (!memoryStore.employees) memoryStore.employees = [];
+  memoryStore.employees.unshift(savedEmp || newEmp);
+  persistStore();
+  return res.status(201).json(savedEmp || newEmp);
 });
 
 // PUT: Update Employee Status & Credentials (Super Admin action)
@@ -139,37 +140,46 @@ router.put("/:id/status", verifyToken, async (req, res) => {
     });
   }
 
-  try {
-    if (getDbConnected()) {
+  if (getDbConnected()) {
+    try {
       const emp = await Employee.findOne({
         $or: [{ _id: id.match(/^[0-9a-fA-F]{24}$/) ? id : null }, { empId: id }],
       });
-      if (!emp) return res.status(404).json({ message: "Employee not found" });
-
-      emp.status = status;
-      if (email) emp.email = email.trim().toLowerCase();
-      if (password) emp.password = password;
-      await emp.save();
-      return res.json(emp);
+      if (emp) {
+        emp.status = status;
+        if (email) emp.email = email.trim().toLowerCase();
+        if (password) emp.password = password;
+        await emp.save();
+        const index = (memoryStore.employees || []).findIndex(
+          (e) => e._id === id || e.empId === id
+        );
+        if (index !== -1) {
+          memoryStore.employees[index].status = status;
+          if (email) memoryStore.employees[index].email = email.trim().toLowerCase();
+          if (password) memoryStore.employees[index].password = password;
+        }
+        persistStore();
+        return res.json(emp);
+      }
+    } catch (err) {
+      console.warn("Status update DB fallback:", err.message);
     }
-
-    const index = (memoryStore.employees || []).findIndex(
-      (e) => e._id === id || e.empId === id
-    );
-    if (index === -1) return res.status(404).json({ message: "Employee not found" });
-
-    const current = memoryStore.employees[index];
-    current.status = status;
-    if (email) current.email = email.trim().toLowerCase();
-    if (password) current.password = password;
-    if (status === "Pending" && req.body.clearPassword) current.password = "";
-
-    memoryStore.employees[index] = current;
-    return res.json(current);
-  } catch (err) {
-    console.error("Status update error:", err);
-    return res.status(500).json({ message: "Failed to update employee status" });
   }
+
+  const index = (memoryStore.employees || []).findIndex(
+    (e) => e._id === id || e.empId === id
+  );
+  if (index === -1) return res.status(404).json({ message: "Employee not found" });
+
+  const current = memoryStore.employees[index];
+  current.status = status;
+  if (email) current.email = email.trim().toLowerCase();
+  if (password) current.password = password;
+  if (status === "Pending" && req.body.clearPassword) current.password = "";
+
+  memoryStore.employees[index] = current;
+  persistStore();
+  return res.json(current);
 });
 
 // PUT: Update Employee Details
@@ -177,47 +187,57 @@ router.put("/:id", verifyToken, async (req, res) => {
   const { id } = req.params;
   const updates = req.body;
 
-  try {
-    if (getDbConnected()) {
+  if (getDbConnected()) {
+    try {
       const updated = await Employee.findOneAndUpdate(
         { $or: [{ _id: id.match(/^[0-9a-fA-F]{24}$/) ? id : null }, { empId: id }] },
         updates,
         { new: true }
       );
-      if (!updated) return res.status(404).json({ message: "Employee not found" });
-      return res.json(updated);
+      if (updated) {
+        const index = (memoryStore.employees || []).findIndex(
+          (e) => e._id === id || e.empId === id
+        );
+        if (index !== -1) {
+          memoryStore.employees[index] = { ...memoryStore.employees[index], ...updates };
+        }
+        persistStore();
+        return res.json(updated);
+      }
+    } catch (err) {
+      console.warn("Update employee DB fallback:", err.message);
     }
-
-    const index = (memoryStore.employees || []).findIndex(
-      (e) => e._id === id || e.empId === id
-    );
-    if (index === -1) return res.status(404).json({ message: "Employee not found" });
-
-    memoryStore.employees[index] = { ...memoryStore.employees[index], ...updates };
-    return res.json(memoryStore.employees[index]);
-  } catch (err) {
-    return res.status(500).json({ message: "Failed to update employee" });
   }
+
+  const index = (memoryStore.employees || []).findIndex(
+    (e) => e._id === id || e.empId === id
+  );
+  if (index === -1) return res.status(404).json({ message: "Employee not found" });
+
+  memoryStore.employees[index] = { ...memoryStore.employees[index], ...updates };
+  persistStore();
+  return res.json(memoryStore.employees[index]);
 });
 
 // DELETE: Remove Employee
 router.delete("/:id", verifyToken, async (req, res) => {
   const { id } = req.params;
-  try {
-    if (getDbConnected()) {
+
+  if (getDbConnected()) {
+    try {
       await Employee.findOneAndDelete({
         $or: [{ _id: id.match(/^[0-9a-fA-F]{24}$/) ? id : null }, { empId: id }],
       });
-      return res.json({ message: "Employee deleted successfully" });
+    } catch (err) {
+      console.warn("Delete employee DB fallback:", err.message);
     }
-
-    memoryStore.employees = (memoryStore.employees || []).filter(
-      (e) => e._id !== id && e.empId !== id
-    );
-    return res.json({ message: "Employee deleted successfully" });
-  } catch (err) {
-    return res.status(500).json({ message: "Failed to delete employee" });
   }
+
+  memoryStore.employees = (memoryStore.employees || []).filter(
+    (e) => e._id !== id && e.empId !== id
+  );
+  persistStore();
+  return res.json({ message: "Employee deleted successfully" });
 });
 
 export default router;

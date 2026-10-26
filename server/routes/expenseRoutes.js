@@ -1,7 +1,7 @@
 import express from "express";
 import { Expense } from "../models/Expense.js";
 import { verifyToken } from "../middleware/auth.js";
-import { getDbConnected, memoryStore } from "../store/memoryStore.js";
+import { getDbConnected, memoryStore, persistStore } from "../store/memoryStore.js";
 
 const router = express.Router();
 
@@ -26,7 +26,7 @@ router.post("/", verifyToken, async (req, res) => {
     return res.status(400).json({ message: "Reason / purpose is required." });
 
   const newExpense = {
-    // _id: "exp-" + Date.now(),
+    _id: "exp-" + Date.now(),
     date: date,
     category: category || "General",
     to: to?.trim() || "",
@@ -38,16 +38,21 @@ router.post("/", verifyToken, async (req, res) => {
     createdAt: new Date().toISOString(),
   };
 
+  let savedExpense = newExpense;
+
   if (getDbConnected()) {
     try {
-      const doc = await Expense.create(newExpense);
-      return res.status(201).json({ message: "Expense recorded.", entry: doc });
+      savedExpense = await Expense.create(newExpense);
     } catch (e) {
-      console.error(e);
+      console.warn("Expense DB fallback:", e.message);
     }
   }
-  memoryStore.expenses.unshift(newExpense);
-  return res.status(201).json({ message: "Expense recorded.", entry: newExpense });
+
+  if (!memoryStore.expenses) memoryStore.expenses = [];
+  memoryStore.expenses.unshift(savedExpense || newExpense);
+  persistStore();
+
+  return res.status(201).json({ message: "Expense recorded.", entry: savedExpense || newExpense });
 });
 
 // Get All Expenses (GET /api/expenses - Admin Protected)
@@ -55,12 +60,12 @@ router.get("/", verifyToken, async (req, res) => {
   if (getDbConnected()) {
     try {
       const docs = await Expense.find().sort({ createdAt: -1 });
-      return res.json(docs);
+      if (docs && docs.length > 0) return res.json(docs);
     } catch (e) {
       console.error(e);
     }
   }
-  return res.json(memoryStore.expenses);
+  return res.json(memoryStore.expenses || []);
 });
 
 // Update Expense (PUT /api/expenses/:id - Admin Protected)
@@ -76,16 +81,21 @@ router.put("/:id", verifyToken, async (req, res) => {
   if (getDbConnected()) {
     try {
       const doc = await Expense.findByIdAndUpdate(id, clean, { new: true });
-      if (doc) return res.json(doc);
-      return res.status(404).json({ message: "Expense not found." });
+      if (doc) {
+        const item = (memoryStore.expenses || []).find((x) => x._id === id || x.id === id);
+        if (item) Object.assign(item, clean, { _id: item._id });
+        persistStore();
+        return res.json(doc);
+      }
     } catch (e) {
       console.error(e);
     }
   }
 
-  const item = memoryStore.expenses.find((x) => x._id === id || x.id === id);
+  const item = (memoryStore.expenses || []).find((x) => x._id === id || x.id === id);
   if (item) {
     Object.assign(item, clean, { _id: item._id });
+    persistStore();
     return res.json(item);
   }
   return res.status(404).json({ message: "Expense not found." });
@@ -98,13 +108,13 @@ router.delete("/:id", verifyToken, async (req, res) => {
   if (getDbConnected()) {
     try {
       await Expense.findByIdAndDelete(id);
-      return res.json({ message: "Expense deleted." });
     } catch (e) {
       console.error(e);
     }
   }
 
-  memoryStore.expenses = memoryStore.expenses.filter((x) => x._id !== id && x.id !== id);
+  memoryStore.expenses = (memoryStore.expenses || []).filter((x) => x._id !== id && x.id !== id);
+  persistStore();
   return res.json({ message: "Expense deleted." });
 });
 

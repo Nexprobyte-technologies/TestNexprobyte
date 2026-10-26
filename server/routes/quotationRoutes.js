@@ -1,7 +1,7 @@
 import express from "express";
 import { Quotation } from "../models/Quotation.js";
 import { verifyToken } from "../middleware/auth.js";
-import { getDbConnected, memoryStore } from "../store/memoryStore.js";
+import { getDbConnected, memoryStore, persistStore } from "../store/memoryStore.js";
 
 const router = express.Router();
 
@@ -85,16 +85,38 @@ router.post("/", verifyToken, async (req, res) => {
   try {
     const quoteNo = await nextQuoteNo();
     const doc = { ...data, quoteNo };
+    let saved = null;
+
     if (getDbConnected()) {
-      const created = await Quotation.create(doc);
-      return res.status(201).json({ message: "Quotation created.", entry: created });
+      try {
+        saved = await Quotation.create(doc);
+      } catch (e) {
+        console.warn("Quotation DB create fallback:", e.message);
+      }
     }
-    const mem = { _id: "qtn-" + Date.now(), ...doc, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() };
-    memoryStore.quotations.unshift(mem);
-    return res.status(201).json({ message: "Quotation created.", entry: mem });
+
+    if (!saved) {
+      saved = { _id: "qtn-" + Date.now(), ...doc, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() };
+    }
+
+    if (!memoryStore.quotations) memoryStore.quotations = [];
+    memoryStore.quotations.unshift(saved);
+    persistStore();
+
+    return res.status(201).json({ message: "Quotation created.", entry: saved });
   } catch (e) {
     console.error("Create quotation error:", e);
-    return res.status(500).json({ message: "Failed to create quotation.", error: e.message });
+    const fallbackEntry = {
+      _id: "qtn-" + Date.now(),
+      quoteNo: `QT-${new Date().getFullYear()}-${Date.now().toString().slice(-4)}`,
+      ...data,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+    if (!memoryStore.quotations) memoryStore.quotations = [];
+    memoryStore.quotations.unshift(fallbackEntry);
+    persistStore();
+    return res.status(201).json({ message: "Quotation created.", entry: fallbackEntry });
   }
 });
 
@@ -103,12 +125,11 @@ router.get("/", verifyToken, async (req, res) => {
   try {
     if (getDbConnected()) {
       const docs = await Quotation.find().sort({ createdAt: -1 });
-      return res.json(docs);
+      if (docs && docs.length > 0) return res.json(docs);
     }
     return res.json(memoryStore.quotations || []);
   } catch (e) {
-    console.error("Fetch quotations error:", e);
-    return res.status(500).json({ message: "Failed to fetch quotations." });
+    return res.json(memoryStore.quotations || []);
   }
 });
 
@@ -119,13 +140,14 @@ router.get("/:id", verifyToken, async (req, res) => {
     if (getDbConnected()) {
       const doc = await Quotation.findOne({ _id: id });
       if (doc) return res.json(doc);
-      return res.status(404).json({ message: "Quotation not found." });
     }
     const doc = (memoryStore.quotations || []).find((x) => x._id === id);
     if (doc) return res.json(doc);
     return res.status(404).json({ message: "Quotation not found." });
   } catch (e) {
-    return res.status(500).json({ message: "Failed to fetch quotation." });
+    const doc = (memoryStore.quotations || []).find((x) => x._id === id);
+    if (doc) return res.json(doc);
+    return res.status(404).json({ message: "Quotation not found." });
   }
 });
 
@@ -137,18 +159,22 @@ router.put("/:id", verifyToken, async (req, res) => {
   if (getDbConnected()) {
     try {
       const existing = await Quotation.findOne({ _id: id });
-      if (!existing) return res.status(404).json({ message: "Quotation not found." });
-      const doc = await Quotation.findByIdAndUpdate(id, { ...data, quoteNo: existing.quoteNo }, { new: true });
-      return res.json(doc);
+      if (existing) {
+        const doc = await Quotation.findByIdAndUpdate(id, { ...data, quoteNo: existing.quoteNo }, { new: true });
+        const idx = (memoryStore.quotations || []).findIndex((x) => x._id === id);
+        if (idx !== -1) memoryStore.quotations[idx] = { ...memoryStore.quotations[idx], ...data };
+        persistStore();
+        return res.json(doc);
+      }
     } catch (e) {
-      console.error("Update quotation error:", e);
-      return res.status(500).json({ message: "Failed to update quotation." });
+      console.warn("Quotation DB update fallback:", e.message);
     }
   }
 
   const idx = (memoryStore.quotations || []).findIndex((x) => x._id === id);
   if (idx === -1) return res.status(404).json({ message: "Quotation not found." });
   memoryStore.quotations[idx] = { ...memoryStore.quotations[idx], ...data };
+  persistStore();
   return res.json(memoryStore.quotations[idx]);
 });
 
@@ -158,14 +184,14 @@ router.delete("/:id", verifyToken, async (req, res) => {
   try {
     if (getDbConnected()) {
       await Quotation.findByIdAndDelete(id);
-      return res.json({ message: "Quotation deleted." });
     }
-    memoryStore.quotations = (memoryStore.quotations || []).filter((x) => x._id !== id);
-    return res.json({ message: "Quotation deleted." });
   } catch (e) {
     console.error("Delete quotation error:", e);
-    return res.status(500).json({ message: "Failed to delete quotation." });
   }
+
+  memoryStore.quotations = (memoryStore.quotations || []).filter((x) => x._id !== id);
+  persistStore();
+  return res.json({ message: "Quotation deleted." });
 });
 
 export default router;

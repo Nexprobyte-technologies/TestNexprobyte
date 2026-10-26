@@ -1,7 +1,7 @@
 import express from "express";
 import { Attendance } from "../models/Attendance.js";
 import { verifyToken } from "../middleware/auth.js";
-import { getDbConnected, memoryStore } from "../store/memoryStore.js";
+import { getDbConnected, memoryStore, persistStore } from "../store/memoryStore.js";
 
 const router = express.Router();
 
@@ -47,27 +47,35 @@ router.post("/clockin", verifyToken, async (req, res) => {
 
   try {
     if (getDbConnected()) {
-      let existing = await Attendance.findOne({ employeeId, date: today });
-      if (existing && !existing.clockOut) {
-        return res.status(400).json({ message: "Already clocked in! Please punch out first." });
+      try {
+        let existing = await Attendance.findOne({ employeeId, date: today });
+        if (existing && !existing.clockOut) {
+          return res.status(400).json({ message: "Already clocked in! Please punch out first." });
+        }
+        if (existing && existing.clockOut) {
+          existing.clockIn = nowTime;
+          existing.clockOut = "";
+          existing.totalHours = "Working...";
+          existing.status = status;
+          await existing.save();
+          persistStore();
+          return res.json(existing);
+        }
+        const record = await Attendance.create({
+          employeeId,
+          employeeName,
+          date: today,
+          clockIn: nowTime,
+          status,
+          notes: req.body.notes || (isLate ? "Clocked in after 9:30 AM" : "Standard on-time clock in"),
+        });
+        if (!memoryStore.attendance) memoryStore.attendance = [];
+        memoryStore.attendance.unshift(record);
+        persistStore();
+        return res.status(201).json(record);
+      } catch (err) {
+        console.warn("Postgres clockin fallback:", err.message);
       }
-      if (existing && existing.clockOut) {
-        existing.clockIn = nowTime;
-        existing.clockOut = "";
-        existing.totalHours = "Working...";
-        existing.status = status;
-        await existing.save();
-        return res.json(existing);
-      }
-      const record = await Attendance.create({
-        employeeId,
-        employeeName,
-        date: today,
-        clockIn: nowTime,
-        status,
-        notes: req.body.notes || (isLate ? "Clocked in after 9:30 AM" : "Standard on-time clock in"),
-      });
-      return res.status(201).json(record);
     }
 
     if (!memoryStore.attendance) memoryStore.attendance = [];
@@ -83,6 +91,7 @@ router.post("/clockin", verifyToken, async (req, res) => {
       rec.totalHours = "Working...";
       rec.status = status;
       memoryStore.attendance[existingIndex] = rec;
+      persistStore();
       return res.json(rec);
     }
 
@@ -99,6 +108,7 @@ router.post("/clockin", verifyToken, async (req, res) => {
       createdAt: new Date().toISOString(),
     };
     memoryStore.attendance.unshift(newRecord);
+    persistStore();
     return res.status(201).json(newRecord);
   } catch (err) {
     console.error("Clockin error:", err);
@@ -114,14 +124,23 @@ router.post("/clockout", verifyToken, async (req, res) => {
 
   try {
     if (getDbConnected()) {
-      const record = await Attendance.findOne({ employeeId, date: today });
-      if (!record || !record.clockIn) {
-        return res.status(404).json({ message: "No active punch-in found for today. Punch in first." });
+      try {
+        const record = await Attendance.findOne({ employeeId, date: today });
+        if (record && record.clockIn) {
+          record.clockOut = nowTime;
+          record.totalHours = "8h 15m";
+          await record.save();
+          const memRec = (memoryStore.attendance || []).find((r) => r.employeeId === employeeId && r.date === today);
+          if (memRec) {
+            memRec.clockOut = nowTime;
+            memRec.totalHours = "8h 15m";
+          }
+          persistStore();
+          return res.json(record);
+        }
+      } catch (err) {
+        console.warn("Postgres clockout fallback:", err.message);
       }
-      record.clockOut = nowTime;
-      record.totalHours = "8h 15m";
-      await record.save();
-      return res.json(record);
     }
 
     const record = (memoryStore.attendance || []).find(
@@ -133,6 +152,7 @@ router.post("/clockout", verifyToken, async (req, res) => {
 
     record.clockOut = nowTime;
     record.totalHours = "8h 15m";
+    persistStore();
     return res.json(record);
   } catch (err) {
     return res.status(500).json({ message: "Failed to clock out" });

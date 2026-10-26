@@ -49,6 +49,7 @@ export function CTA() {
         </motion.p>
 
         <motion.div
+          className="cta-buttons"
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -59,8 +60,7 @@ export function CTA() {
           </a>
           <a
             href="tel:+919500042426"
-            className="btn"
-            style={{ marginLeft: 12, color: "#fff", borderColor: "rgba(255,255,255,.4)" }}
+            className="btn btn-outline-white"
           >
             +91 95000 42426
           </a>

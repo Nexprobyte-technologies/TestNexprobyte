@@ -99,11 +99,11 @@ export function FadeIn({ children, delay = 0, y = 36, className = "", ...rest })
   );
 }
 
-export function SectionHead({ num, label, title, delay = 0 }) {
+export function SectionHead({ label, title, icon, delay = 0 }) {
   return (
     <FadeIn className="section-head" delay={delay}>
       <span className="eyebrow">
-        <span className="num">{num}</span>
+        <span className="eyebrow-spark">{icon || "✦"}</span>
         <span>{label}</span>
       </span>
       {title ? <RevealText text={title} as="h2" className="h-mid" /> : null}

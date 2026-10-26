@@ -142,25 +142,26 @@ export default function InterviewDataCollect() {
     width: "100%",
     padding: "13px 16px",
     borderRadius: "12px",
-    background: "rgba(255, 255, 255, 0.06)",
-    border: err ? "1.5px solid #ef4444" : "1.5px solid rgba(255, 255, 255, 0.15)",
-    color: "#fff",
-    fontSize: "14.5px",
+    background: "#ffffff",
+    border: err ? "1.5px solid #ef4444" : "1.5px solid rgba(18, 56, 95, 0.18)",
+    color: "#12385F",
+    fontSize: "15px",
     outline: "none",
+    boxShadow: "0 1px 3px rgba(18, 56, 95, 0.04)",
   });
 
   const labelStyle = {
     display: "block",
-    fontSize: "13px",
+    fontSize: "13.5px",
     fontWeight: 700,
     marginBottom: "8px",
-    color: "var(--fg, #fff)",
+    color: "#12385F",
   };
 
   const selectStyle = (err) => ({
     ...inputStyle(err),
     appearance: "none",
-    backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E")`,
+    backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2312385F' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E")`,
     backgroundRepeat: "no-repeat",
     backgroundPosition: "right 16px center",
     paddingRight: "40px",
@@ -191,14 +192,8 @@ export default function InterviewDataCollect() {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.6, ease: EASE }}
-              style={{
-                background: "var(--card-bg, #0f1422)",
-                border: "1px solid rgba(16, 185, 129, 0.3)",
-                borderRadius: "24px",
-                padding: "48px 36px",
-                textAlign: "center",
-                boxShadow: "0 20px 50px rgba(0,0,0,0.3)",
-              }}
+              className="form-card-box"
+              style={{ textAlign: "center" }}
             >
               <div
                 style={{
@@ -216,12 +211,12 @@ export default function InterviewDataCollect() {
               >
                 ✓
               </div>
-              <h2 style={{ fontSize: "28px", fontWeight: 800, marginBottom: "12px", color: "var(--fg, #fff)" }}>
+              <h2 style={{ fontSize: "28px", fontWeight: 800, marginBottom: "12px", color: "#12385F" }}>
                 Details Submitted Successfully!
               </h2>
-              <p style={{ fontSize: "16px", color: "var(--muted, #94a3b8)", lineHeight: 1.6, maxWidth: "520px", margin: "0 auto 28px" }}>
-                Thank you, <strong>{formData.name}</strong>. Your interview details and resume have been received.
-                Our HR team will contact you via <strong style={{ color: "var(--accent, #ff4d6d)" }}>{formData.email}</strong> shortly.
+              <p style={{ fontSize: "16px", color: "#536E8C", lineHeight: 1.6, maxWidth: "520px", margin: "0 auto 28px" }}>
+                Thank you, <strong>{formData.name}</strong>. Your interview details and resume have been securely recorded in our database.
+                Our HR team will contact you via <strong style={{ color: "var(--accent)" }}>{formData.email}</strong> shortly.
               </p>
               <div style={{ display: "flex", gap: "14px", justifyContent: "center", flexWrap: "wrap" }}>
                 <Link to="/careers" className="btn btn-solid">← Back to Careers</Link>
@@ -233,53 +228,47 @@ export default function InterviewDataCollect() {
               initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, ease: EASE }}
-              style={{
-                background: "rgba(255, 255, 255, 0.03)",
-                border: "1px solid rgba(255, 255, 255, 0.08)",
-                borderRadius: "24px",
-                padding: "40px 36px",
-                backdropFilter: "blur(12px)",
-              }}
+              className="form-card-box"
             >
               {/* Company Logo + Title */}
               <div style={{ textAlign: "center", marginBottom: "28px" }}>
                 <img
                   src="/images/nxtpro-logo.png"
                   alt="Nexprobyte Logo"
-                  style={{ height: 56, objectFit: "contain", marginBottom: "16px" }}
+                  style={{ height: 52, objectFit: "contain", marginBottom: "16px" }}
                 />
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "10px", marginBottom: "8px" }}>
                   <span className="mini-tag accent-tag">Interview Registration</span>
                   <span className="mini-tag">Collect Data</span>
                 </div>
-                <h2 style={{ fontSize: "24px", fontWeight: 800, color: "var(--fg, #fff)" }}>
+                <h2 style={{ fontSize: "24px", fontWeight: 800, color: "#12385F" }}>
                   Interview Candidate Details
                 </h2>
-                <p style={{ fontSize: "14px", color: "var(--muted, #94a3b8)", marginTop: "4px" }}>
-                  Please fill out the fields below. Fields marked with <span style={{ color: "#ff4d6d" }}>*</span> are required.
+                <p style={{ fontSize: "14px", color: "#536E8C", marginTop: "4px" }}>
+                  Please fill out the fields below. Fields marked with <span style={{ color: "#ef4444" }}>*</span> are required.
                 </p>
               </div>
 
               {serverError && (
                 <div style={{
-                  background: "rgba(239, 68, 68, 0.12)",
+                  background: "rgba(239, 68, 68, 0.08)",
                   border: "1px solid rgba(239, 68, 68, 0.3)",
-                  color: "#fca5a5",
+                  color: "#dc2626",
                   padding: "14px 18px",
                   borderRadius: "12px",
                   marginBottom: "24px",
                   fontSize: "14px",
                   fontWeight: 600,
                 }}>
-                  ⚠️ {serverError}
+                  <span style={{ marginRight: 6 }}>•</span> {serverError}
                 </div>
               )}
 
               <form onSubmit={handleSubmit} noValidate>
                 {/* Name & Email */}
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "18px", marginBottom: "22px" }}>
+                <div className="form-row-2col">
                   <div>
-                    <label style={labelStyle}>Name <span style={{ color: "#ff4d6d" }}>*</span></label>
+                    <label style={labelStyle}>Name <span style={{ color: "#ef4444" }}>*</span></label>
                     <input
                       type="text"
                       placeholder="e.g. John Doe"
@@ -287,10 +276,10 @@ export default function InterviewDataCollect() {
                       onChange={(e) => { set("name", e.target.value); if (errors.name) setErrors({ ...errors, name: "" }); }}
                       style={inputStyle(errors.name)}
                     />
-                    {errors.name && <div style={{ color: "#f87171", fontSize: "12px", marginTop: "6px", fontWeight: 600 }}>{errors.name}</div>}
+                    {errors.name && <div style={{ color: "#ef4444", fontSize: "12px", marginTop: "6px", fontWeight: 600 }}>{errors.name}</div>}
                   </div>
                   <div>
-                    <label style={labelStyle}>Email Address <span style={{ color: "#ff4d6d" }}>*</span></label>
+                    <label style={labelStyle}>Email Address <span style={{ color: "#ef4444" }}>*</span></label>
                     <input
                       type="email"
                       placeholder="name@example.com"
@@ -298,41 +287,38 @@ export default function InterviewDataCollect() {
                       onChange={(e) => { set("email", e.target.value); if (errors.email) setErrors({ ...errors, email: "" }); }}
                       style={inputStyle(errors.email)}
                     />
-                    {errors.email && <div style={{ color: "#f87171", fontSize: "12px", marginTop: "6px", fontWeight: 600 }}>{errors.email}</div>}
+                    {errors.email && <div style={{ color: "#ef4444", fontSize: "12px", marginTop: "6px", fontWeight: 600 }}>{errors.email}</div>}
                   </div>
                 </div>
 
                 {/* DOB & Experience Type */}
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "18px", marginBottom: "22px" }}>
+                <div className="form-row-2col">
                   <div>
-                    <label style={labelStyle}>Date of Birth <span style={{ color: "#ff4d6d" }}>*</span></label>
+                    <label style={labelStyle}>Date of Birth <span style={{ color: "#ef4444" }}>*</span></label>
                     <input
                       type="date"
                       value={formData.dob}
                       onChange={(e) => { set("dob", e.target.value); if (errors.dob) setErrors({ ...errors, dob: "" }); }}
-                      style={{
-                        ...inputStyle(errors.dob),
-                        colorScheme: "dark",
-                      }}
+                      style={inputStyle(errors.dob)}
                     />
-                    {errors.dob && <div style={{ color: "#f87171", fontSize: "12px", marginTop: "6px", fontWeight: 600 }}>{errors.dob}</div>}
+                    {errors.dob && <div style={{ color: "#ef4444", fontSize: "12px", marginTop: "6px", fontWeight: 600 }}>{errors.dob}</div>}
                   </div>
                   <div>
-                    <label style={labelStyle}>Experience Type <span style={{ color: "#ff4d6d" }}>*</span></label>
+                    <label style={labelStyle}>Experience Type <span style={{ color: "#ef4444" }}>*</span></label>
                     <select
                       value={formData.experienceType}
                       onChange={(e) => { set("experienceType", e.target.value); if (errors.experienceYears) setErrors({ ...errors, experienceYears: "" }); }}
                       style={selectStyle(false)}
                     >
-                      <option value="Fresher" style={{ background: "#181022", color: "#fff" }}>Fresher</option>
-                      <option value="Experienced" style={{ background: "#181022", color: "#fff" }}>Experienced</option>
+                      <option value="Fresher">Fresher</option>
+                      <option value="Experienced">Experienced</option>
                     </select>
                   </div>
                 </div>
 
                 {/* Address */}
                 <div style={{ marginBottom: "22px" }}>
-                  <label style={labelStyle}>Address <span style={{ color: "#ff4d6d" }}>*</span></label>
+                  <label style={labelStyle}>Address <span style={{ color: "#ef4444" }}>*</span></label>
                   <textarea
                     rows={3}
                     placeholder="Full postal address"
@@ -344,7 +330,7 @@ export default function InterviewDataCollect() {
                       lineHeight: 1.6,
                     }}
                   />
-                  {errors.address && <div style={{ color: "#f87171", fontSize: "12px", marginTop: "6px", fontWeight: 600 }}>{errors.address}</div>}
+                  {errors.address && <div style={{ color: "#ef4444", fontSize: "12px", marginTop: "6px", fontWeight: 600 }}>{errors.address}</div>}
                 </div>
 
                 {/* Experience Years (Experienced only) */}
@@ -355,22 +341,22 @@ export default function InterviewDataCollect() {
                     transition={{ duration: 0.3, ease: EASE }}
                     style={{ marginBottom: "22px", overflow: "hidden" }}
                   >
-                    <label style={labelStyle}>Years of Experience <span style={{ color: "#ff4d6d" }}>*</span></label>
+                    <label style={labelStyle}>Years of Experience <span style={{ color: "#ef4444" }}>*</span></label>
                     <input
                       type="text"
-                      placeholder="e.g. 4 Years"
+                      placeholder="e.g. 3 Years"
                       value={formData.experienceYears}
                       onChange={(e) => { set("experienceYears", e.target.value); if (errors.experienceYears) setErrors({ ...errors, experienceYears: "" }); }}
                       style={inputStyle(errors.experienceYears)}
                     />
-                    {errors.experienceYears && <div style={{ color: "#f87171", fontSize: "12px", marginTop: "6px", fontWeight: 600 }}>{errors.experienceYears}</div>}
+                    {errors.experienceYears && <div style={{ color: "#ef4444", fontSize: "12px", marginTop: "6px", fontWeight: 600 }}>{errors.experienceYears}</div>}
                   </motion.div>
                 )}
 
                 {/* Resume / PDF Upload */}
                 <div style={{ marginBottom: "24px" }}>
                   <label style={labelStyle}>
-                    Upload Resume (PDF Only, Max 5MB) <span style={{ color: "#ff4d6d" }}>*</span>
+                    Upload Resume (PDF Only, Max 5MB) <span style={{ color: "#ef4444" }}>*</span>
                   </label>
                   <input
                     type="file"
@@ -385,20 +371,27 @@ export default function InterviewDataCollect() {
                     <div
                       onClick={() => fileInputRef.current && fileInputRef.current.click()}
                       style={{
-                        border: errors.resume ? "2px dashed #ef4444" : "2px dashed rgba(255, 255, 255, 0.2)",
+                        border: errors.resume ? "2px dashed #ef4444" : "2px dashed rgba(8, 125, 193, 0.3)",
                         borderRadius: "16px",
-                        padding: "32px 20px",
+                        padding: "30px 20px",
                         textAlign: "center",
-                        background: "rgba(255, 255, 255, 0.02)",
+                        background: "rgba(8, 125, 193, 0.03)",
                         cursor: "pointer",
                         transition: "all 0.2s ease",
                       }}
                     >
-                      <div style={{ fontSize: "32px", marginBottom: "8px" }}>📄</div>
-                      <div style={{ fontSize: "15px", fontWeight: 700, color: "var(--fg, #fff)", marginBottom: "4px" }}>
+                      <div style={{ display: "inline-flex", justifyContent: "center", marginBottom: "8px", color: "var(--accent)" }}>
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                          <polyline points="14 2 14 8 20 8"/>
+                          <line x1="16" x2="8" y1="13" y2="13"/>
+                          <line x1="16" x2="8" y1="17" y2="17"/>
+                        </svg>
+                      </div>
+                      <div style={{ fontSize: "15px", fontWeight: 700, color: "#12385F", marginBottom: "4px" }}>
                         Click to browse or drag &amp; drop your resume
                       </div>
-                      <div style={{ fontSize: "12.5px", color: "var(--muted, #94a3b8)" }}>
+                      <div style={{ fontSize: "12.5px", color: "#536E8C" }}>
                         Supported format: <strong>.PDF</strong> (Maximum file size: 5MB)
                       </div>
                     </div>
@@ -412,6 +405,8 @@ export default function InterviewDataCollect() {
                         borderRadius: "14px",
                         background: "rgba(16, 185, 129, 0.08)",
                         border: "1px solid rgba(16, 185, 129, 0.3)",
+                        flexWrap: "wrap",
+                        gap: "10px",
                       }}
                     >
                       <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
@@ -425,16 +420,16 @@ export default function InterviewDataCollect() {
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "center",
-                            fontSize: "20px",
+                            fontSize: "14px",
                             fontWeight: 800,
                           }}
                         >
                           PDF
                         </div>
                         <div>
-                          <div style={{ fontWeight: 700, fontSize: "14.5px", color: "#fff" }}>{resumeFileName}</div>
-                          <div style={{ fontSize: "12px", color: "var(--muted, #94a3b8)", marginTop: "2px" }}>
-                            {resumeSize} · Verified PDF Ready for submission
+                          <div style={{ fontWeight: 700, fontSize: "14.5px", color: "#12385F" }}>{resumeFileName}</div>
+                          <div style={{ fontSize: "12px", color: "#536E8C", marginTop: "2px" }}>
+                            {resumeSize} • Verified PDF Ready for submission
                           </div>
                         </div>
                       </div>
@@ -442,7 +437,7 @@ export default function InterviewDataCollect() {
                         type="button"
                         onClick={handleRemoveFile}
                         style={{
-                          background: "rgba(239, 68, 68, 0.15)",
+                          background: "rgba(239, 68, 68, 0.1)",
                           border: "1px solid rgba(239, 68, 68, 0.3)",
                           color: "#ef4444",
                           padding: "6px 12px",
@@ -456,7 +451,7 @@ export default function InterviewDataCollect() {
                       </button>
                     </div>
                   )}
-                  {errors.resume && <div style={{ color: "#f87171", fontSize: "12px", marginTop: "6px", fontWeight: 600 }}>{errors.resume}</div>}
+                  {errors.resume && <div style={{ color: "#ef4444", fontSize: "12px", marginTop: "6px", fontWeight: 600 }}>{errors.resume}</div>}
                 </div>
 
                 {/* Submit Button */}
@@ -474,7 +469,7 @@ export default function InterviewDataCollect() {
                     opacity: submitting ? 0.7 : 1,
                   }}
                 >
-                  {submitting ? "Submitting..." : "Submit Data →"}
+                  {submitting ? "Submitting to Database..." : "Submit Data →"}
                 </button>
               </form>
             </motion.div>

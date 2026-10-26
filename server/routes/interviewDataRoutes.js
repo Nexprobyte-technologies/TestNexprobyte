@@ -1,7 +1,7 @@
 import express from "express";
 import { InterviewData } from "../models/InterviewData.js";
 import { verifyToken } from "../middleware/auth.js";
-import { getDbConnected, memoryStore } from "../store/memoryStore.js";
+import { getDbConnected, memoryStore, persistStore } from "../store/memoryStore.js";
 
 const router = express.Router();
 
@@ -23,6 +23,7 @@ router.post("/", async (req, res) => {
   if (!email || !email.includes("@")) return res.status(400).json({ message: "Valid Email is required." });
 
   const newEntry = {
+    _id: "ivw-" + Date.now(),
     name: name.trim(),
     dob: dob || "",
     email: email.trim(),
@@ -36,24 +37,24 @@ router.post("/", async (req, res) => {
     createdAt: new Date().toISOString(),
   };
 
-  if (getDbConnected()) {
-  try {
-    const doc = await InterviewData.create(newEntry);
-    return res.status(201).json({
-      message: "Interview data saved successfully!",
-      entry: doc,
-    });
-  } catch (e) {
-    console.error("Create interview data error:", e);
-    return res.status(500).json({
-      message: "Failed to save interview data",
-      error: e.message,
-    });
-  }
-}
+  let savedDoc = newEntry;
 
-  memoryStore.interviewData.unshift(newEntry);
-  return res.status(201).json({ message: "Interview data saved successfully!", entry: newEntry });
+  if (getDbConnected()) {
+    try {
+      savedDoc = await InterviewData.create(newEntry);
+    } catch (e) {
+      console.warn("PostgreSQL interview data create fallback:", e.message);
+    }
+  }
+
+  if (!memoryStore.interviewData) memoryStore.interviewData = [];
+  memoryStore.interviewData.unshift(savedDoc || newEntry);
+  persistStore();
+
+  return res.status(201).json({
+    message: "Interview data saved successfully!",
+    entry: savedDoc || newEntry,
+  });
 });
 
 // Get All Interview Data (GET /api/interview-data - Admin Protected)
@@ -61,12 +62,12 @@ router.get("/", verifyToken, async (req, res) => {
   if (getDbConnected()) {
     try {
       const docs = await InterviewData.find().sort({ createdAt: -1 });
-      return res.json(docs);
+      if (docs && docs.length > 0) return res.json(docs);
     } catch (e) {
       console.error(e);
     }
   }
-  return res.json(memoryStore.interviewData);
+  return res.json(memoryStore.interviewData || []);
 });
 
 // Update Interview Data Status (PUT /api/interview-data/:id - Admin Protected)
@@ -77,16 +78,21 @@ router.put("/:id", verifyToken, async (req, res) => {
   if (getDbConnected()) {
     try {
       const doc = await InterviewData.findByIdAndUpdate(id, { status }, { new: true });
-      if (doc) return res.json(doc);
-      return res.status(404).json({ message: "Entry not found." });
+      if (doc) {
+        const item = (memoryStore.interviewData || []).find((x) => x._id === id || x.id === id);
+        if (item) item.status = status;
+        persistStore();
+        return res.json(doc);
+      }
     } catch (e) {
       console.error(e);
     }
   }
 
-  const item = memoryStore.interviewData.find((x) => x._id === id || x.id === id);
+  const item = (memoryStore.interviewData || []).find((x) => x._id === id || x.id === id);
   if (item) {
     item.status = status;
+    persistStore();
     return res.json(item);
   }
   return res.status(404).json({ message: "Entry not found." });
@@ -123,18 +129,23 @@ router.put("/:id/onboarding", verifyToken, async (req, res) => {
   if (getDbConnected()) {
     try {
       const doc = await InterviewData.findById(id);
-      if (!doc) return res.status(404).json({ message: "Entry not found." });
-      doc.onboarding = { ...(doc.onboarding || {}), ...onboardingPatch };
-      await doc.save();
-      return res.json({ message: "Onboarding details saved.", entry: doc });
+      if (doc) {
+        doc.onboarding = { ...(doc.onboarding || {}), ...onboardingPatch };
+        await doc.save();
+        const item = (memoryStore.interviewData || []).find((x) => x._id === id || x.id === id);
+        if (item) item.onboarding = { ...item.onboarding, ...onboardingPatch };
+        persistStore();
+        return res.json({ message: "Onboarding details saved.", entry: doc });
+      }
     } catch (e) {
       console.error(e);
     }
   }
 
-  const item = memoryStore.interviewData.find((x) => x._id === id || x.id === id);
+  const item = (memoryStore.interviewData || []).find((x) => x._id === id || x.id === id);
   if (item) {
     item.onboarding = { ...item.onboarding, ...onboardingPatch };
+    persistStore();
     return res.json({ message: "Onboarding details saved.", entry: item });
   }
   return res.status(404).json({ message: "Entry not found." });
@@ -148,16 +159,21 @@ router.put("/:id/full", verifyToken, async (req, res) => {
   if (getDbConnected()) {
     try {
       const doc = await InterviewData.findByIdAndUpdate(id, patch, { new: true });
-      if (doc) return res.json(doc);
-      return res.status(404).json({ message: "Entry not found." });
+      if (doc) {
+        const item = (memoryStore.interviewData || []).find((x) => x._id === id || x.id === id);
+        if (item) Object.assign(item, patch, { _id: item._id });
+        persistStore();
+        return res.json(doc);
+      }
     } catch (e) {
       console.error(e);
     }
   }
 
-  const item = memoryStore.interviewData.find((x) => x._id === id || x.id === id);
+  const item = (memoryStore.interviewData || []).find((x) => x._id === id || x.id === id);
   if (item) {
     Object.assign(item, patch, { _id: item._id });
+    persistStore();
     return res.json(item);
   }
   return res.status(404).json({ message: "Entry not found." });
@@ -170,13 +186,13 @@ router.delete("/:id", verifyToken, async (req, res) => {
   if (getDbConnected()) {
     try {
       await InterviewData.findByIdAndDelete(id);
-      return res.json({ message: "Entry deleted successfully." });
     } catch (e) {
       console.error(e);
     }
   }
 
-  memoryStore.interviewData = memoryStore.interviewData.filter((x) => x._id !== id && x.id !== id);
+  memoryStore.interviewData = (memoryStore.interviewData || []).filter((x) => x._id !== id && x.id !== id);
+  persistStore();
   return res.json({ message: "Entry deleted successfully." });
 });
 

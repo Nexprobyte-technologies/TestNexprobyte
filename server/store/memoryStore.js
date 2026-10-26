@@ -1,3 +1,12 @@
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const DATA_DIR = path.join(__dirname, "..", "data");
+const DB_FILE_PATH = path.join(DATA_DIR, "persistent_db.json");
+
 let isDbConnected = false;
 
 export const setDbConnected = (status) => {
@@ -102,21 +111,22 @@ export const memoryStore = {
     {
       id: "job-2",
       _id: "job-2",
-      slug: "wordpress-developer",
-      title: "WordPress Developer",
+      slug: "fullstack-developer",
+      title: "Full Stack Developer",
       dept: "Engineering",
-      location: "Coimbatore",
+      location: "Coimbatore / Remote",
       type: "Full-time",
-      salary: "₹2.5L – ₹5L / year",
+      salary: "₹3.5L – ₹7L / year",
       palette: "mint",
-      excerpt: "Craft custom WordPress themes and plugins for clients in manufacturing, e-commerce and services.",
+      excerpt: "Build high-performance web applications, scalable REST APIs, and modern user interfaces using React, Node.js, and modern databases.",
       responsibilities: [
-        "Develop custom themes and plugins from scratch",
-        "Set up e-commerce stores with WooCommerce",
+        "Architect and build robust web applications end-to-end",
+        "Develop responsive frontends with React and scalable Node.js APIs",
+        "Design database schemas with PostgreSQL and MongoDB",
       ],
       requirements: [
-        "2+ years WordPress development experience",
-        "Advanced PHP and MySQL knowledge",
+        "2+ years experience in full-stack JavaScript / TypeScript development",
+        "Strong proficiency in React, Node.js, Express, and databases",
       ],
       active: true,
       createdAt: new Date().toISOString(),
@@ -477,5 +487,59 @@ export const memoryStore = {
       createdAt: new Date(Date.now() - 86400000 * 35).toISOString(),
     },
   ],
+  interviewData: [],
 };
+
+let persistTimeout = null;
+
+export function persistStore(immediate = true) {
+  const save = () => {
+    try {
+      if (!fs.existsSync(DATA_DIR)) {
+        fs.mkdirSync(DATA_DIR, { recursive: true });
+      }
+      fs.writeFileSync(DB_FILE_PATH, JSON.stringify(memoryStore, null, 2), "utf8");
+    } catch (err) {
+      console.error("❌ [Persistent DB Error]: Failed to save to disk:", err.message);
+    }
+  };
+
+  if (immediate) {
+    if (persistTimeout) clearTimeout(persistTimeout);
+    save();
+  } else {
+    if (persistTimeout) clearTimeout(persistTimeout);
+    persistTimeout = setTimeout(save, 200);
+  }
+}
+
+export function loadPersistedData() {
+  try {
+    if (!fs.existsSync(DATA_DIR)) {
+      fs.mkdirSync(DATA_DIR, { recursive: true });
+    }
+    if (fs.existsSync(DB_FILE_PATH)) {
+      const raw = fs.readFileSync(DB_FILE_PATH, "utf8");
+      const parsed = JSON.parse(raw);
+      if (parsed && typeof parsed === "object") {
+        for (const [key, value] of Object.entries(parsed)) {
+          if (value !== undefined) {
+            memoryStore[key] = value;
+          }
+        }
+        console.log(`💾 [Persistent DB]: Successfully loaded collections from ${DB_FILE_PATH}`);
+        return;
+      }
+    }
+    // If persistent_db.json does not exist yet, write default initial state to disk
+    persistStore(true);
+    console.log(`💾 [Persistent DB]: Created initial persistent storage at ${DB_FILE_PATH}`);
+  } catch (err) {
+    console.warn("⚠️ [Persistent DB Warning]: Could not read persistent_db.json:", err.message);
+  }
+}
+
+// Automatically load persisted data on module initialization
+loadPersistedData();
+
 

@@ -15,19 +15,94 @@ const PERKS = [
 
 function getJobMeta(title = "", dept = "") {
   const t = title.toLowerCase();
-  if (t.includes("frontend") || t.includes("react"))
-    return { icon: "⚛️", bg: "linear-gradient(135deg, #0369a1, #0284c7)", tag: "React / Web", label: "Frontend" };
-  if (t.includes("wordpress") || t.includes("php"))
-    return { icon: "🌐", bg: "linear-gradient(135deg, #1d4ed8, #2563eb)", tag: "WP / PHP", label: "WordPress" };
-  if (t.includes("designer") || t.includes("ui") || t.includes("ux"))
-    return { icon: "🎨", bg: "linear-gradient(135deg, #db2777, #7c3aed)", tag: "UI / UX", label: "Design" };
-  if (t.includes("full stack") || t.includes("backend") || t.includes("node"))
-    return { icon: "⚡", bg: "linear-gradient(135deg, #059669, #10b981)", tag: "Full Stack", label: "Backend" };
-  if (t.includes("mobile") || t.includes("app") || t.includes("flutter") || t.includes("ios") || t.includes("android"))
-    return { icon: "📱", bg: "linear-gradient(135deg, #6366f1, #4f46e5)", tag: "Mobile / App", label: "Mobile" };
-  if (t.includes("marketing") || t.includes("seo") || t.includes("growth"))
-    return { icon: "📈", bg: "linear-gradient(135deg, #ea580c, #f97316)", tag: "Marketing", label: "Growth" };
-  return { icon: "💼", bg: "linear-gradient(135deg, #ff4d6d, #8b5cf6)", tag: dept || "Engineering", label: "Engineering" };
+
+  if (t.includes("frontend") || t.includes("react")) {
+    return {
+      bg: "linear-gradient(135deg, #0284c7 0%, #0369a1 50%, #0c4a6e 100%)",
+      glow: "0 8px 24px rgba(2, 132, 199, 0.4)",
+      tag: "React / Web",
+      iconSvg: (
+        <svg width="34" height="34" viewBox="-11.5 -10.23174 23 20.46348" fill="none" stroke="#67e8f9" strokeWidth="1.3">
+          <circle cx="0" cy="0" r="2.2" fill="#67e8f9" />
+          <ellipse rx="11" ry="4.2" />
+          <ellipse rx="11" ry="4.2" transform="rotate(60)" />
+          <ellipse rx="11" ry="4.2" transform="rotate(120)" />
+        </svg>
+      ),
+    };
+  }
+
+  if (t.includes("full stack") || t.includes("fullstack") || t.includes("backend") || t.includes("node")) {
+    return {
+      bg: "linear-gradient(135deg, #059669 0%, #0d9488 50%, #042f2e 100%)",
+      glow: "0 8px 24px rgba(13, 148, 136, 0.4)",
+      tag: "Full Stack",
+      iconSvg: (
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#6ee7b7" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+          <polyline points="16 18 22 12 16 6" />
+          <polyline points="8 6 2 12 8 18" />
+          <line x1="14" y1="4" x2="10" y2="20" stroke="#ffffff" />
+        </svg>
+      ),
+    };
+  }
+
+  if (t.includes("designer") || t.includes("ui") || t.includes("ux")) {
+    return {
+      bg: "linear-gradient(135deg, #f97316 0%, #ea580c 50%, #7c2d12 100%)",
+      glow: "0 8px 24px rgba(249, 115, 22, 0.4)",
+      tag: "UI / UX Design",
+      iconSvg: (
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fed7aa" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M12 19l7-7 3 3-7 7-3-3z" />
+          <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z" />
+          <path d="M2 2l7.586 7.586" />
+          <circle cx="11" cy="11" r="2" />
+        </svg>
+      ),
+    };
+  }
+
+  if (t.includes("mobile") || t.includes("app") || t.includes("flutter") || t.includes("ios") || t.includes("android")) {
+    return {
+      bg: "linear-gradient(135deg, #8b5cf6 0%, #6d28d9 50%, #3b0764 100%)",
+      glow: "0 8px 24px rgba(139, 92, 246, 0.4)",
+      tag: "Mobile / App",
+      iconSvg: (
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ddd6fe" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="5" y="2" width="14" height="20" rx="3" />
+          <line x1="12" y1="18" x2="12.01" y2="18" strokeWidth="3" strokeLinecap="round" />
+        </svg>
+      ),
+    };
+  }
+
+  if (t.includes("marketing") || t.includes("seo") || t.includes("growth")) {
+    return {
+      bg: "linear-gradient(135deg, #ec4899 0%, #db2777 50%, #700732 100%)",
+      glow: "0 8px 24px rgba(236, 72, 153, 0.4)",
+      tag: "Marketing / SEO",
+      iconSvg: (
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fbcfe8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <polyline points="22 7 13.5 15.5 8.5 10.5 2 17" />
+          <polyline points="16 7 22 7 22 13" />
+        </svg>
+      ),
+    };
+  }
+
+  return {
+    bg: "linear-gradient(135deg, #0284c7 0%, #0369a1 50%, #082f49 100%)",
+    glow: "0 8px 24px rgba(2, 132, 199, 0.4)",
+    tag: dept || "Engineering",
+    iconSvg: (
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <polygon points="12 2 2 7 12 12 22 7 12 2" />
+        <polyline points="2 17 12 22 22 17" />
+        <polyline points="2 12 12 17 22 12" />
+      </svg>
+    ),
+  };
 }
 
 export default function Careers() {
@@ -111,18 +186,45 @@ export default function Careers() {
                         alignItems: "center",
                         justifyContent: "center",
                         gap: "6px",
-                        boxShadow: "0 8px 24px rgba(0,0,0,0.3)",
-                        border: "1px solid rgba(255,255,255,0.18)",
+                        boxShadow: meta.glow,
+                        border: "1px solid rgba(255, 255, 255, 0.22)",
+                        position: "relative",
+                        overflow: "hidden",
+                        padding: "8px 6px",
                       }}
                     >
-                      <span style={{ fontSize: "30px", lineHeight: 1 }}>{meta.icon}</span>
+                      {/* Top ambient glass sheen */}
+                      <div
+                        style={{
+                          position: "absolute",
+                          top: 0,
+                          left: 0,
+                          right: 0,
+                          height: "50%",
+                          background: "linear-gradient(180deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0) 100%)",
+                          pointerEvents: "none",
+                        }}
+                      />
+                      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1 }}>
+                        {meta.iconSvg}
+                      </div>
                       <span
                         style={{
-                          fontSize: "10.5px",
+                          zIndex: 1,
+                          fontSize: "11px",
                           fontWeight: 800,
                           color: "#ffffff",
                           textTransform: "uppercase",
-                          letterSpacing: "0.08em",
+                          letterSpacing: "0.06em",
+                          background: "rgba(0, 0, 0, 0.28)",
+                          padding: "2px 8px",
+                          borderRadius: "999px",
+                          border: "1px solid rgba(255, 255, 255, 0.25)",
+                          backdropFilter: "blur(6px)",
+                          lineHeight: 1.15,
+                          textAlign: "center",
+                          maxWidth: "96%",
+                          whiteSpace: "nowrap",
                         }}
                       >
                         {meta.tag}

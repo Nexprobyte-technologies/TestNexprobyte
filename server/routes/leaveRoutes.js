@@ -1,7 +1,7 @@
 import express from "express";
 import { Leave } from "../models/Leave.js";
 import { verifyToken } from "../middleware/auth.js";
-import { getDbConnected, memoryStore } from "../store/memoryStore.js";
+import { getDbConnected, memoryStore, persistStore } from "../store/memoryStore.js";
 
 const router = express.Router();
 
@@ -15,7 +15,7 @@ router.get("/", verifyToken, async (req, res) => {
     if (getDbConnected()) {
       const query = targetEmpId ? { employeeId: targetEmpId } : {};
       const leaves = await Leave.find(query).sort({ createdAt: -1 });
-      return res.json(leaves);
+      if (leaves && leaves.length > 0) return res.json(leaves);
     }
 
     let leaves = memoryStore.leaves || [];
@@ -24,7 +24,9 @@ router.get("/", verifyToken, async (req, res) => {
     }
     return res.json(leaves);
   } catch (err) {
-    return res.status(500).json({ message: "Failed to fetch leaves" });
+    let leaves = memoryStore.leaves || [];
+    if (targetEmpId) leaves = leaves.filter((l) => l.employeeId === targetEmpId);
+    return res.json(leaves);
   }
 });
 
@@ -39,7 +41,7 @@ router.post("/", verifyToken, async (req, res) => {
   }
 
   const newLeave = {
-    // _id: `lv-${Date.now()}`,
+    _id: `lv-${Date.now()}`,
     employeeId,
     employeeName,
     leaveType: leaveType || "Casual Leave",
@@ -52,19 +54,20 @@ router.post("/", verifyToken, async (req, res) => {
     createdAt: new Date().toISOString(),
   };
 
-  try {
-    if (getDbConnected()) {
-      const created = await Leave.create(newLeave);
-      return res.status(201).json(created);
-    }
+  let savedLeave = newLeave;
 
-    if (!memoryStore.leaves) memoryStore.leaves = [];
-    memoryStore.leaves.unshift(newLeave);
-    return res.status(201).json(newLeave);
-  } catch (err) {
-    console.error("Apply leave error:", err);
-    return res.status(500).json({ message: "Failed to apply for leave" });
+  if (getDbConnected()) {
+    try {
+      savedLeave = await Leave.create(newLeave);
+    } catch (err) {
+      console.warn("Apply leave DB fallback:", err.message);
+    }
   }
+
+  if (!memoryStore.leaves) memoryStore.leaves = [];
+  memoryStore.leaves.unshift(savedLeave || newLeave);
+  persistStore();
+  return res.status(201).json(savedLeave || newLeave);
 });
 
 // PUT Update Leave Status (Super Admin action)
@@ -76,25 +79,33 @@ router.put("/:id/status", verifyToken, async (req, res) => {
     return res.status(400).json({ message: "Status must be Pending, Approved, or Rejected" });
   }
 
-  try {
-    if (getDbConnected()) {
+  if (getDbConnected()) {
+    try {
       const leave = await Leave.findById(id);
-      if (!leave) return res.status(404).json({ message: "Leave request not found" });
-      leave.status = status;
-      if (adminRemark !== undefined) leave.adminRemark = adminRemark;
-      await leave.save();
-      return res.json(leave);
+      if (leave) {
+        leave.status = status;
+        if (adminRemark !== undefined) leave.adminRemark = adminRemark;
+        await leave.save();
+        const memLeave = (memoryStore.leaves || []).find((l) => l._id === id);
+        if (memLeave) {
+          memLeave.status = status;
+          if (adminRemark !== undefined) memLeave.adminRemark = adminRemark;
+        }
+        persistStore();
+        return res.json(leave);
+      }
+    } catch (err) {
+      console.warn("Update leave status DB fallback:", err.message);
     }
-
-    const leave = (memoryStore.leaves || []).find((l) => l._id === id);
-    if (!leave) return res.status(404).json({ message: "Leave request not found" });
-
-    leave.status = status;
-    if (adminRemark !== undefined) leave.adminRemark = adminRemark;
-    return res.json(leave);
-  } catch (err) {
-    return res.status(500).json({ message: "Failed to update leave status" });
   }
+
+  const leave = (memoryStore.leaves || []).find((l) => l._id === id);
+  if (!leave) return res.status(404).json({ message: "Leave request not found" });
+
+  leave.status = status;
+  if (adminRemark !== undefined) leave.adminRemark = adminRemark;
+  persistStore();
+  return res.json(leave);
 });
 
 export default router;

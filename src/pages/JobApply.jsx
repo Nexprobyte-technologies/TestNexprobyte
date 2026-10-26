@@ -298,14 +298,8 @@ export default function JobApply() {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.6, ease: EASE }}
-              style={{
-                background: "var(--card-bg, #0f1422)",
-                border: "1px solid rgba(16, 185, 129, 0.3)",
-                borderRadius: "24px",
-                padding: "48px 36px",
-                textAlign: "center",
-                boxShadow: "0 20px 50px rgba(0,0,0,0.3)",
-              }}
+              className="form-card-box"
+              style={{ textAlign: "center" }}
             >
               <div
                 style={{
@@ -324,13 +318,13 @@ export default function JobApply() {
                 ✓
               </div>
 
-              <h2 style={{ fontSize: "28px", fontWeight: 800, marginBottom: "12px", color: "var(--fg, #fff)" }}>
+              <h2 style={{ fontSize: "28px", fontWeight: 800, marginBottom: "12px", color: "#12385F" }}>
                 Application Submitted Successfully!
               </h2>
 
-              <p style={{ fontSize: "16px", color: "var(--muted, #94a3b8)", lineHeight: 1.6, maxWidth: "520px", margin: "0 auto 28px" }}>
+              <p style={{ fontSize: "16px", color: "#536E8C", lineHeight: 1.6, maxWidth: "520px", margin: "0 auto 28px" }}>
                 Thank you, <strong>{formData.name}</strong>. We have received your application for the{" "}
-                <strong style={{ color: "var(--accent, #ff4d6d)" }}>{formData.jobTitle}</strong> position. Our recruiting team will review your profile and reach out to you within 48 hours.
+                <strong style={{ color: "var(--accent)" }}>{formData.jobTitle}</strong> position. Our recruiting team will review your profile and reach out to you within 48 hours.
               </p>
 
               <div style={{ display: "flex", gap: "14px", justifyContent: "center", flexWrap: "wrap" }}>
@@ -348,33 +342,27 @@ export default function JobApply() {
               initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, ease: EASE }}
-              style={{
-                background: "rgba(255, 255, 255, 0.03)",
-                border: "1px solid rgba(255, 255, 255, 0.08)",
-                borderRadius: "24px",
-                padding: "40px 36px",
-                backdropFilter: "blur(12px)",
-              }}
+              className="form-card-box"
             >
               <div style={{ marginBottom: "28px" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "8px" }}>
                   <span className="mini-tag accent-tag">Application Form</span>
                   <span className="mini-tag">Full-time / Remote</span>
                 </div>
-                <h2 style={{ fontSize: "24px", fontWeight: 800, color: "var(--fg, #fff)" }}>
+                <h2 style={{ fontSize: "24px", fontWeight: 800, color: "#12385F" }}>
                   Candidate Details
                 </h2>
-                <p style={{ fontSize: "14px", color: "var(--muted, #94a3b8)", marginTop: "4px" }}>
-                  Please fill out the fields below. Fields marked with <span style={{ color: "#ff4d6d" }}>*</span> are required.
+                <p style={{ fontSize: "14px", color: "#536E8C", marginTop: "4px" }}>
+                  Please fill out the fields below. Fields marked with <span style={{ color: "#ef4444" }}>*</span> are required.
                 </p>
               </div>
 
               {serverError && (
                 <div
                   style={{
-                    background: "rgba(239, 68, 68, 0.12)",
+                    background: "rgba(239, 68, 68, 0.08)",
                     border: "1px solid rgba(239, 68, 68, 0.3)",
-                    color: "#fca5a5",
+                    color: "#dc2626",
                     padding: "14px 18px",
                     borderRadius: "12px",
                     marginBottom: "24px",
@@ -382,15 +370,15 @@ export default function JobApply() {
                     fontWeight: 600,
                   }}
                 >
-                  ⚠️ {serverError}
+                  <span style={{ marginRight: 6 }}>•</span> {serverError}
                 </div>
               )}
 
               <form onSubmit={handleSubmit} noValidate>
                 {/* 1. Job Role Dropdown */}
                 <div style={{ marginBottom: "22px" }}>
-                  <label style={{ display: "block", fontSize: "13px", fontWeight: 700, marginBottom: "8px", color: "var(--fg, #fff)" }}>
-                    Applying for Role <span style={{ color: "#ff4d6d" }}>*</span>
+                  <label style={{ display: "block", fontSize: "13.5px", fontWeight: 700, marginBottom: "8px", color: "#12385F" }}>
+                    Applying for Role <span style={{ color: "#ef4444" }}>*</span>
                   </label>
                   <select
                     value={formData.jobTitle}
@@ -399,40 +387,40 @@ export default function JobApply() {
                       width: "100%",
                       padding: "13px 16px",
                       borderRadius: "12px",
-                      background: "rgba(255, 255, 255, 0.06)",
-                      border: errors.jobTitle ? "1.5px solid #ef4444" : "1.5px solid rgba(255, 255, 255, 0.15)",
-                      color: "#fff",
+                      background: "#ffffff",
+                      border: errors.jobTitle ? "1.5px solid #ef4444" : "1.5px solid rgba(18, 56, 95, 0.18)",
+                      color: "#12385F",
                       fontSize: "15px",
                       fontWeight: 600,
                       outline: "none",
                       appearance: "none",
-                      backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E")`,
+                      backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2312385F' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E")`,
                       backgroundRepeat: "no-repeat",
                       backgroundPosition: "right 16px center",
                       paddingRight: "40px",
                     }}
                   >
                     {jobsList.map((j) => (
-                      <option key={j._id || j.id || j.slug} value={j.title} style={{ background: "#181022", color: "#fff" }}>
+                      <option key={j._id || j.id || j.slug} value={j.title}>
                         {j.title} ({j.dept || "Engineering"} · {j.location || "Coimbatore"})
                       </option>
                     ))}
-                    <option value="General Application" style={{ background: "#181022", color: "#fff" }}>
+                    <option value="General Application">
                       General Speculative Application (Other Role)
                     </option>
                   </select>
                   {errors.jobTitle && (
-                    <div style={{ color: "#f87171", fontSize: "12px", marginTop: "6px", fontWeight: 600 }}>
+                    <div style={{ color: "#ef4444", fontSize: "12px", marginTop: "6px", fontWeight: 600 }}>
                       {errors.jobTitle}
                     </div>
                   )}
                 </div>
 
                 {/* 2. Full Name & Email */}
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "18px", marginBottom: "22px" }}>
+                <div className="form-row-2col">
                   <div>
-                    <label style={{ display: "block", fontSize: "13px", fontWeight: 700, marginBottom: "8px", color: "var(--fg, #fff)" }}>
-                      Full Name <span style={{ color: "#ff4d6d" }}>*</span>
+                    <label style={{ display: "block", fontSize: "13.5px", fontWeight: 700, marginBottom: "8px", color: "#12385F" }}>
+                      Full Name <span style={{ color: "#ef4444" }}>*</span>
                     </label>
                     <input
                       type="text"
@@ -446,23 +434,23 @@ export default function JobApply() {
                         width: "100%",
                         padding: "13px 16px",
                         borderRadius: "12px",
-                        background: "rgba(255, 255, 255, 0.06)",
-                        border: errors.name ? "1.5px solid #ef4444" : "1.5px solid rgba(255, 255, 255, 0.15)",
-                        color: "#fff",
-                        fontSize: "14.5px",
+                        background: "#ffffff",
+                        border: errors.name ? "1.5px solid #ef4444" : "1.5px solid rgba(18, 56, 95, 0.18)",
+                        color: "#12385F",
+                        fontSize: "15px",
                         outline: "none",
                       }}
                     />
                     {errors.name && (
-                      <div style={{ color: "#f87171", fontSize: "12px", marginTop: "6px", fontWeight: 600 }}>
+                      <div style={{ color: "#ef4444", fontSize: "12px", marginTop: "6px", fontWeight: 600 }}>
                         {errors.name}
                       </div>
                     )}
                   </div>
 
                   <div>
-                    <label style={{ display: "block", fontSize: "13px", fontWeight: 700, marginBottom: "8px", color: "var(--fg, #fff)" }}>
-                      Email Address <span style={{ color: "#ff4d6d" }}>*</span>
+                    <label style={{ display: "block", fontSize: "13.5px", fontWeight: 700, marginBottom: "8px", color: "#12385F" }}>
+                      Email Address <span style={{ color: "#ef4444" }}>*</span>
                     </label>
                     <input
                       type="email"
@@ -476,15 +464,15 @@ export default function JobApply() {
                         width: "100%",
                         padding: "13px 16px",
                         borderRadius: "12px",
-                        background: "rgba(255, 255, 255, 0.06)",
-                        border: errors.email ? "1.5px solid #ef4444" : "1.5px solid rgba(255, 255, 255, 0.15)",
-                        color: "#fff",
-                        fontSize: "14.5px",
+                        background: "#ffffff",
+                        border: errors.email ? "1.5px solid #ef4444" : "1.5px solid rgba(18, 56, 95, 0.18)",
+                        color: "#12385F",
+                        fontSize: "15px",
                         outline: "none",
                       }}
                     />
                     {errors.email && (
-                      <div style={{ color: "#f87171", fontSize: "12px", marginTop: "6px", fontWeight: 600 }}>
+                      <div style={{ color: "#ef4444", fontSize: "12px", marginTop: "6px", fontWeight: 600 }}>
                         {errors.email}
                       </div>
                     )}
@@ -492,10 +480,10 @@ export default function JobApply() {
                 </div>
 
                 {/* 3. Phone Number & Experience */}
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "18px", marginBottom: "22px" }}>
+                <div className="form-row-2col">
                   <div>
-                    <label style={{ display: "block", fontSize: "13px", fontWeight: 700, marginBottom: "8px", color: "var(--fg, #fff)" }}>
-                      Phone Number <span style={{ color: "#ff4d6d" }}>*</span>
+                    <label style={{ display: "block", fontSize: "13.5px", fontWeight: 700, marginBottom: "8px", color: "#12385F" }}>
+                      Phone Number <span style={{ color: "#ef4444" }}>*</span>
                     </label>
                     <input
                       type="tel"
@@ -509,23 +497,23 @@ export default function JobApply() {
                         width: "100%",
                         padding: "13px 16px",
                         borderRadius: "12px",
-                        background: "rgba(255, 255, 255, 0.06)",
-                        border: errors.phone ? "1.5px solid #ef4444" : "1.5px solid rgba(255, 255, 255, 0.15)",
-                        color: "#fff",
-                        fontSize: "14.5px",
+                        background: "#ffffff",
+                        border: errors.phone ? "1.5px solid #ef4444" : "1.5px solid rgba(18, 56, 95, 0.18)",
+                        color: "#12385F",
+                        fontSize: "15px",
                         outline: "none",
                       }}
                     />
                     {errors.phone && (
-                      <div style={{ color: "#f87171", fontSize: "12px", marginTop: "6px", fontWeight: 600 }}>
+                      <div style={{ color: "#ef4444", fontSize: "12px", marginTop: "6px", fontWeight: 600 }}>
                         {errors.phone}
                       </div>
                     )}
                   </div>
 
                   <div>
-                    <label style={{ display: "block", fontSize: "13px", fontWeight: 700, marginBottom: "8px", color: "var(--fg, #fff)" }}>
-                      Experience Level <span style={{ color: "#ff4d6d" }}>*</span>
+                    <label style={{ display: "block", fontSize: "13.5px", fontWeight: 700, marginBottom: "8px", color: "#12385F" }}>
+                      Experience Level <span style={{ color: "#ef4444" }}>*</span>
                     </label>
                     <select
                       value={formData.experience}
@@ -534,20 +522,20 @@ export default function JobApply() {
                         width: "100%",
                         padding: "13px 16px",
                         borderRadius: "12px",
-                        background: "rgba(255, 255, 255, 0.06)",
-                        border: "1.5px solid rgba(255, 255, 255, 0.15)",
-                        color: "#fff",
-                        fontSize: "14.5px",
+                        background: "#ffffff",
+                        border: "1.5px solid rgba(18, 56, 95, 0.18)",
+                        color: "#12385F",
+                        fontSize: "15px",
                         outline: "none",
                         appearance: "none",
-                        backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E")`,
+                        backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2312385F' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E")`,
                         backgroundRepeat: "no-repeat",
                         backgroundPosition: "right 16px center",
                         paddingRight: "40px",
                       }}
                     >
                       {EXPERIENCE_LEVELS.map((exp) => (
-                        <option key={exp} value={exp} style={{ background: "#181022", color: "#fff" }}>
+                        <option key={exp} value={exp}>
                           {exp}
                         </option>
                       ))}
@@ -556,10 +544,10 @@ export default function JobApply() {
                 </div>
 
                 {/* 4. Portfolio URL & LinkedIn URL */}
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "18px", marginBottom: "22px" }}>
+                <div className="form-row-2col">
                   <div>
-                    <label style={{ display: "block", fontSize: "13px", fontWeight: 700, marginBottom: "8px", color: "var(--fg, #fff)" }}>
-                      Portfolio / GitHub URL <span style={{ color: "var(--muted, #94a3b8)", fontWeight: 400 }}>(Optional)</span>
+                    <label style={{ display: "block", fontSize: "13.5px", fontWeight: 700, marginBottom: "8px", color: "#12385F" }}>
+                      Portfolio / GitHub URL <span style={{ color: "#536E8C", fontWeight: 400 }}>(Optional)</span>
                     </label>
                     <input
                       type="url"
@@ -573,23 +561,23 @@ export default function JobApply() {
                         width: "100%",
                         padding: "13px 16px",
                         borderRadius: "12px",
-                        background: "rgba(255, 255, 255, 0.06)",
-                        border: errors.portfolioUrl ? "1.5px solid #ef4444" : "1.5px solid rgba(255, 255, 255, 0.15)",
-                        color: "#fff",
-                        fontSize: "14.5px",
+                        background: "#ffffff",
+                        border: errors.portfolioUrl ? "1.5px solid #ef4444" : "1.5px solid rgba(18, 56, 95, 0.18)",
+                        color: "#12385F",
+                        fontSize: "15px",
                         outline: "none",
                       }}
                     />
                     {errors.portfolioUrl && (
-                      <div style={{ color: "#f87171", fontSize: "12px", marginTop: "6px", fontWeight: 600 }}>
+                      <div style={{ color: "#ef4444", fontSize: "12px", marginTop: "6px", fontWeight: 600 }}>
                         {errors.portfolioUrl}
                       </div>
                     )}
                   </div>
 
                   <div>
-                    <label style={{ display: "block", fontSize: "13px", fontWeight: 700, marginBottom: "8px", color: "var(--fg, #fff)" }}>
-                      LinkedIn Profile <span style={{ color: "var(--muted, #94a3b8)", fontWeight: 400 }}>(Optional)</span>
+                    <label style={{ display: "block", fontSize: "13.5px", fontWeight: 700, marginBottom: "8px", color: "#12385F" }}>
+                      LinkedIn Profile <span style={{ color: "#536E8C", fontWeight: 400 }}>(Optional)</span>
                     </label>
                     <input
                       type="url"
@@ -603,25 +591,25 @@ export default function JobApply() {
                         width: "100%",
                         padding: "13px 16px",
                         borderRadius: "12px",
-                        background: "rgba(255, 255, 255, 0.06)",
-                        border: errors.linkedinUrl ? "1.5px solid #ef4444" : "1.5px solid rgba(255, 255, 255, 0.15)",
-                        color: "#fff",
-                        fontSize: "14.5px",
+                        background: "#ffffff",
+                        border: errors.linkedinUrl ? "1.5px solid #ef4444" : "1.5px solid rgba(18, 56, 95, 0.18)",
+                        color: "#12385F",
+                        fontSize: "15px",
                         outline: "none",
                       }}
                     />
                     {errors.linkedinUrl && (
-                      <div style={{ color: "#f87171", fontSize: "12px", marginTop: "6px", fontWeight: 600 }}>
+                      <div style={{ color: "#ef4444", fontSize: "12px", marginTop: "6px", fontWeight: 600 }}>
                         {errors.linkedinUrl}
                       </div>
                     )}
                   </div>
                 </div>
 
-                {/* 5. Resume / PDF Upload (Strict PDF & Size Validation) */}
+                {/* 5. Resume / PDF Upload */}
                 <div style={{ marginBottom: "24px" }}>
-                  <label style={{ display: "block", fontSize: "13px", fontWeight: 700, marginBottom: "8px", color: "var(--fg, #fff)" }}>
-                    Upload Resume (PDF Only, Max 5MB) <span style={{ color: "#ff4d6d" }}>*</span>
+                  <label style={{ display: "block", fontSize: "13.5px", fontWeight: 700, marginBottom: "8px", color: "#12385F" }}>
+                    Upload Resume (PDF Only, Max 5MB) <span style={{ color: "#ef4444" }}>*</span>
                   </label>
 
                   <input
@@ -642,20 +630,27 @@ export default function JobApply() {
                       onDrop={handleDrop}
                       onClick={() => fileInputRef.current && fileInputRef.current.click()}
                       style={{
-                        border: errors.resume ? "2px dashed #ef4444" : "2px dashed rgba(255, 255, 255, 0.2)",
+                        border: errors.resume ? "2px dashed #ef4444" : "2px dashed rgba(8, 125, 193, 0.3)",
                         borderRadius: "16px",
-                        padding: "32px 20px",
+                        padding: "30px 20px",
                         textAlign: "center",
-                        background: "rgba(255, 255, 255, 0.02)",
+                        background: "rgba(8, 125, 193, 0.03)",
                         cursor: "pointer",
                         transition: "all 0.2s ease",
                       }}
                     >
-                      <div style={{ fontSize: "32px", marginBottom: "8px" }}>📄</div>
-                      <div style={{ fontSize: "15px", fontWeight: 700, color: "var(--fg, #fff)", marginBottom: "4px" }}>
+                      <div style={{ display: "inline-flex", justifyContent: "center", marginBottom: "8px", color: "var(--accent)" }}>
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                          <polyline points="14 2 14 8 20 8"/>
+                          <line x1="16" x2="8" y1="13" y2="13"/>
+                          <line x1="16" x2="8" y1="17" y2="17"/>
+                        </svg>
+                      </div>
+                      <div style={{ fontSize: "15px", fontWeight: 700, color: "#12385F", marginBottom: "4px" }}>
                         Click to browse or drag &amp; drop your resume
                       </div>
-                      <div style={{ fontSize: "12.5px", color: "var(--muted, #94a3b8)" }}>
+                      <div style={{ fontSize: "12.5px", color: "#536E8C" }}>
                         Supported format: <strong>.PDF</strong> (Maximum file size: 5MB)
                       </div>
                     </div>
@@ -669,6 +664,8 @@ export default function JobApply() {
                         borderRadius: "14px",
                         background: "rgba(16, 185, 129, 0.08)",
                         border: "1px solid rgba(16, 185, 129, 0.3)",
+                        flexWrap: "wrap",
+                        gap: "10px",
                       }}
                     >
                       <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
@@ -682,18 +679,18 @@ export default function JobApply() {
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "center",
-                            fontSize: "20px",
+                            fontSize: "14px",
                             fontWeight: 800,
                           }}
                         >
                           PDF
                         </div>
                         <div>
-                          <div style={{ fontWeight: 700, fontSize: "14.5px", color: "#fff" }}>
+                          <div style={{ fontWeight: 700, fontSize: "14.5px", color: "#12385F" }}>
                             {resumeFileName}
                           </div>
-                          <div style={{ fontSize: "12px", color: "var(--muted, #94a3b8)", marginTop: "2px" }}>
-                            {resumeSize} · Verified PDF Ready for submission
+                          <div style={{ fontSize: "12px", color: "#536E8C", marginTop: "2px" }}>
+                            {resumeSize} • Verified PDF Ready for submission
                           </div>
                         </div>
                       </div>
@@ -702,7 +699,7 @@ export default function JobApply() {
                         type="button"
                         onClick={handleRemoveFile}
                         style={{
-                          background: "rgba(239, 68, 68, 0.15)",
+                          background: "rgba(239, 68, 68, 0.1)",
                           border: "1px solid rgba(239, 68, 68, 0.3)",
                           color: "#ef4444",
                           padding: "6px 12px",
@@ -718,7 +715,7 @@ export default function JobApply() {
                   )}
 
                   {errors.resume && (
-                    <div style={{ color: "#f87171", fontSize: "12px", marginTop: "6px", fontWeight: 600 }}>
+                    <div style={{ color: "#ef4444", fontSize: "12px", marginTop: "6px", fontWeight: 600 }}>
                       {errors.resume}
                     </div>
                   )}
@@ -726,8 +723,8 @@ export default function JobApply() {
 
                 {/* 6. Cover Letter / Message */}
                 <div style={{ marginBottom: "28px" }}>
-                  <label style={{ display: "block", fontSize: "13px", fontWeight: 700, marginBottom: "8px", color: "var(--fg, #fff)" }}>
-                    Cover Note / Tell Us About Yourself <span style={{ color: "var(--muted, #94a3b8)", fontWeight: 400 }}>(Optional)</span>
+                  <label style={{ display: "block", fontSize: "13.5px", fontWeight: 700, marginBottom: "8px", color: "#12385F" }}>
+                    Cover Note / Tell Us About Yourself <span style={{ color: "#536E8C", fontWeight: 400 }}>(Optional)</span>
                   </label>
                   <textarea
                     rows={4}
@@ -738,10 +735,10 @@ export default function JobApply() {
                       width: "100%",
                       padding: "13px 16px",
                       borderRadius: "12px",
-                      background: "rgba(255, 255, 255, 0.06)",
-                      border: "1.5px solid rgba(255, 255, 255, 0.15)",
-                      color: "#fff",
-                      fontSize: "14.5px",
+                      background: "#ffffff",
+                      border: "1.5px solid rgba(18, 56, 95, 0.18)",
+                      color: "#12385F",
+                      fontSize: "15px",
                       outline: "none",
                       resize: "vertical",
                       lineHeight: 1.6,
@@ -764,7 +761,7 @@ export default function JobApply() {
                     opacity: submitting ? 0.7 : 1,
                   }}
                 >
-                  {submitting ? "Submitting Application..." : "Submit Application →"}
+                  {submitting ? "Submitting Application to Database..." : "Submit Application →"}
                 </button>
               </form>
             </motion.div>

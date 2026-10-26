@@ -24,10 +24,49 @@ export default function ServiceDetail() {
   return (
     <>
       <PageHero
-        num={`Service ${s.num}`}
+        num="Core Service"
         label={s.title}
         title={[s.serif, "that ships"]}
         sub={s.blurb}
+        media={
+          <div className="service-hero-card">
+            <div className="service-hero-image-wrap">
+              <img
+                src={s.image}
+                alt={s.title}
+                className="service-hero-img"
+              />
+              <div className="service-hero-badge service-badge-top">
+                <span className="live-radar-dot" style={{ width: 7, height: 7 }}>
+                  <span className="live-radar-ring" />
+                </span>
+                <span>{s.title} • In-House Team</span>
+              </div>
+              <div className="service-hero-badge service-badge-bottom">
+                <span className="service-badge-spark">✦</span>
+                <span>{s.deliverables[0]} & More</span>
+              </div>
+            </div>
+            <div className="service-hero-meta">
+              <div className="service-hero-stats">
+                <div className="sh-stat">
+                  <span className="sh-stat-num">100%</span>
+                  <span className="sh-stat-label">Custom Scope</span>
+                </div>
+                <div className="sh-stat-divider" />
+                <div className="sh-stat">
+                  <span className="sh-stat-num">Fast</span>
+                  <span className="sh-stat-label">Turnaround</span>
+                </div>
+                <div className="sh-stat-divider" />
+                <div className="sh-stat">
+                  <span className="sh-stat-num">Direct</span>
+                  <span className="sh-stat-label">Team Access</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        }
       >
         <Breadcrumb
           items={[
@@ -46,7 +85,40 @@ export default function ServiceDetail() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.9, delay: 0.2, ease: EASE }}
           >
-            <img src={s.image} alt={s.title} loading="eager" />
+            <div className="detail-scope-card">
+              <div className="scope-card-header">
+                <div className="scope-card-badge">
+                  <span className="live-radar-dot" style={{ width: 6, height: 6 }}>
+                    <span className="live-radar-ring" />
+                  </span>
+                  <span>Execution & Delivery Scope</span>
+                </div>
+                <span className="scope-tag">Standard Sprint: 2–4 Wks</span>
+              </div>
+              <div className="scope-card-body">
+                <div className="scope-item">
+                  <span className="scope-icon">✦</span>
+                  <div>
+                    <strong>Engineered to Convert</strong>
+                    <p>Clean architecture, responsive performance and enterprise stability.</p>
+                  </div>
+                </div>
+                <div className="scope-item">
+                  <span className="scope-icon">✦</span>
+                  <div>
+                    <strong>Senior In-House Team</strong>
+                    <p>Direct communication with engineers and designers in Coimbatore studio.</p>
+                  </div>
+                </div>
+                <div className="scope-item">
+                  <span className="scope-icon">✦</span>
+                  <div>
+                    <strong>Post-Launch Warranty</strong>
+                    <p>Included handover training, maintenance support and code ownership.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </motion.div>
           <motion.div
             className="detail-summary"
@@ -54,7 +126,12 @@ export default function ServiceDetail() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, delay: 0.3, ease: EASE }}
           >
-            <h2>{s.overview}</h2>
+            <div className="eyebrow" style={{ marginBottom: 14 }}>
+              <span className="eyebrow-spark">✦</span>
+              <span>Overview & Strategy</span>
+            </div>
+            <h2 className="detail-headline">{s.headline || s.title}</h2>
+            <p className="detail-desc">{s.overview}</p>
             <div className="btn-row">
               <Link to="/contact" className="btn btn-solid">
                 Start this project <span className="arr">→</span>
@@ -69,7 +146,7 @@ export default function ServiceDetail() {
         <div className="detail-cols" style={{ paddingTop: 64 }}>
           <div>
             <div className="eyebrow">
-              <span className="num">01</span>
+              <span className="eyebrow-spark">✦</span>
               <span>What's included</span>
             </div>
             <ul className="check-list">
@@ -88,7 +165,7 @@ export default function ServiceDetail() {
           </div>
           <div>
             <div className="eyebrow">
-              <span className="num">02</span>
+              <span className="eyebrow-spark">✦</span>
               <span>What you receive</span>
             </div>
             <div className="deliver-grid">
@@ -101,7 +178,7 @@ export default function ServiceDetail() {
                   viewport={{ once: true, amount: 0.5 }}
                   transition={{ duration: 0.6, delay: 0.06 * i, ease: EASE }}
                 >
-                  <span className="deliver-num">0{i + 1}</span>
+                  <span className="deliver-bullet">✦</span>
                   {d}
                 </motion.div>
               ))}
@@ -111,7 +188,7 @@ export default function ServiceDetail() {
 
         <div className="other-services">
           <div className="eyebrow">
-            <span className="num">03</span>
+            <span className="eyebrow-spark">✦</span>
             <span>Explore other services</span>
           </div>
           <div className="pill-row">

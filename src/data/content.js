@@ -8,8 +8,9 @@ export const SERVICES = [
     image: "/images/srv-web.jpg",
     palette: "cobalt",
     icon: "↗",
+    headline: "Your website is your digital storefront.",
     overview:
-      "Your website is your digital storefront. We design and build fast, secure and beautiful websites — from marketing sites to full e-commerce storefronts — engineered to convert.",
+      "We design and build fast, secure and beautiful websites — from marketing sites to full e-commerce storefronts — engineered to convert.",
     features: [
       "Responsive, mobile-first builds",
       "SEO-friendly architecture",
@@ -29,6 +30,7 @@ export const SERVICES = [
     image: "/images/srv-app.jpg",
     palette: "mint",
     icon: "→",
+    headline: "Built for performance and enterprise scale.",
     overview:
       "From internal dashboards to customer-facing SaaS, we build robust web applications with clean code, solid architecture and an eye for what your users actually need.",
     features: [
@@ -50,8 +52,9 @@ export const SERVICES = [
     image: "/images/srv-mobile.jpg",
     palette: "berry",
     icon: "↙",
+    headline: "Reach your customers wherever they are.",
     overview:
-      "Reach your customers where they are. We build cross-platform and native mobile apps that feel fast, look polished and keep users coming back.",
+      "We build cross-platform and native mobile apps that feel fast, look polished and keep users coming back across iOS and Android.",
     features: [
       "React Native & Flutter",
       "Native iOS & Android",
@@ -71,8 +74,9 @@ export const SERVICES = [
     image: "/images/srv-marketing.jpg",
     palette: "fire",
     icon: "→",
+    headline: "We don't guess — we measure.",
     overview:
-      "We don't guess — we measure. Our campaigns are built on data, tested relentlessly and optimised to deliver a real return on every rupee you spend.",
+      "Our campaigns are built on data, tested relentlessly and optimised to deliver a real return on every rupee you spend.",
     features: [
       "Performance marketing (Google, Meta)",
       "Landing page funnels",
@@ -92,8 +96,9 @@ export const SERVICES = [
     image: "/images/srv-seo.jpg",
     palette: "ink",
     icon: "↗",
+    headline: "Own your search results on Google.",
     overview:
-      "Own your search results. We combine technical SEO, content and authority building to move your business to the top of Google — sustainably, not with shortcuts.",
+      "We combine technical SEO, content and authority building to move your business to the top of Google — sustainably, not with shortcuts.",
     features: [
       "Technical site audits",
       "Keyword & competitor research",
@@ -113,8 +118,9 @@ export const SERVICES = [
     image: "/images/srv-social.jpg",
     palette: "cobalt",
     icon: "→",
+    headline: "Turn followers into lifelong customers.",
     overview:
-      "Turn followers into fans and fans into customers. We plan, design and publish content that gives your brand a consistent, confident voice across every platform.",
+      "We plan, design and publish content that gives your brand a consistent, confident voice across every platform.",
     features: [
       "Platform strategy (Ig, Fb, Ln, X)",
       "Content calendars & design",
@@ -134,8 +140,9 @@ export const SERVICES = [
     image: "/images/srv-web.jpg",
     palette: "mint",
     icon: "↗",
+    headline: "Design isn't just how it looks — it's how it works.",
     overview:
-      "Design isn't just how it looks — it's how it works. We craft intuitive user journeys, wireframes, interactive Figma prototypes, and conversion-focused digital experiences that delight users and drive real business outcomes.",
+      "We craft intuitive user journeys, wireframes, interactive Figma prototypes, and conversion-focused digital experiences that delight users and drive real business outcomes.",
     features: [
       "User Research & Journey Mapping",
       "Wireframing & Interactive Prototypes (Figma)",
@@ -155,8 +162,9 @@ export const SERVICES = [
     image: "/images/srv-marketing.jpg",
     palette: "fire",
     icon: "→",
+    headline: "Your brand is your business promise.",
     overview:
-      "Your brand is your promise. We help startups and established brands build distinctive, memorable visual identities — from logo design and typography to comprehensive brand guideline decks.",
+      "We help startups and established brands build distinctive, memorable visual identities — from logo design and typography to comprehensive brand guideline decks.",
     features: [
       "Brand Strategy & Positioning",
       "Logo Design & Visual Identity Systems",
@@ -450,29 +458,29 @@ export const JOBS = [
     ],
   },
   {
-    slug: "wordpress-developer",
-    title: "WordPress Developer",
+    slug: "fullstack-developer",
+    title: "Full Stack Developer",
     dept: "Engineering",
-    location: "Coimbatore",
+    location: "Coimbatore / Remote",
     type: "Full-time",
-    salary: "₹2.5L – ₹5L / year",
+    salary: "₹3.5L – ₹7L / year",
     palette: "mint",
     excerpt:
-      "Craft custom WordPress themes and plugins for clients in manufacturing, e-commerce and services.",
+      "Build high-performance web applications, scalable REST APIs, and modern user interfaces using React, Node.js, and modern databases.",
     image: "/images/job-wordpress.jpg",
     responsibilities: [
-      "Develop custom themes and plugins from scratch",
-      "Set up e-commerce stores with WooCommerce",
-      "Optimise WordPress sites for speed and SEO",
-      "Migrate, secure and maintain client sites",
-      "Work directly with clients on requirements",
+      "Architect and build robust web applications end-to-end",
+      "Develop responsive frontends with React, Next.js and modern CSS",
+      "Design and maintain scalable RESTful APIs with Node.js & Express",
+      "Integrate PostgreSQL, MongoDB, and Redis caching systems",
+      "Implement authentication, security best practices, and CI/CD pipelines",
     ],
     requirements: [
-      "2+ years WordPress development experience",
-      "Advanced PHP and MySQL knowledge",
-      "Experience with WooCommerce and ACF",
-      "Understanding of SEO fundamentals",
-      "Knowledge of the WordPress REST API is a plus",
+      "2+ years experience in full-stack JavaScript / TypeScript development",
+      "Strong proficiency in React, Node.js, Express, and modern ES6+",
+      "Experience with relational (PostgreSQL) or NoSQL (MongoDB) databases",
+      "Proficient in REST API design, state management, and Git workflows",
+      "Bonus: Docker, AWS/cloud deployment, Tailwind or Motion libraries",
     ],
   },
   {

@@ -1,7 +1,7 @@
 import express from "express";
 import { WorkReport } from "../models/WorkReport.js";
 import { verifyToken } from "../middleware/auth.js";
-import { getDbConnected, memoryStore } from "../store/memoryStore.js";
+import { getDbConnected, memoryStore, persistStore } from "../store/memoryStore.js";
 
 const router = express.Router();
 
@@ -15,7 +15,7 @@ router.get("/", verifyToken, async (req, res) => {
     if (getDbConnected()) {
       const query = targetEmpId ? { employeeId: targetEmpId } : {};
       const reports = await WorkReport.find(query).sort({ date: -1, createdAt: -1 });
-      return res.json(reports);
+      if (reports && reports.length > 0) return res.json(reports);
     }
 
     let reports = memoryStore.workReports || [];
@@ -24,7 +24,9 @@ router.get("/", verifyToken, async (req, res) => {
     }
     return res.json(reports);
   } catch (err) {
-    return res.status(500).json({ message: "Failed to fetch work reports" });
+    let reports = memoryStore.workReports || [];
+    if (targetEmpId) reports = reports.filter((r) => r.employeeId === targetEmpId);
+    return res.json(reports);
   }
 });
 
@@ -52,19 +54,20 @@ router.post("/", verifyToken, async (req, res) => {
     createdAt: new Date().toISOString(),
   };
 
-  try {
-    if (getDbConnected()) {
-      const created = await WorkReport.create(newReport);
-      return res.status(201).json(created);
-    }
+  let savedReport = newReport;
 
-    if (!memoryStore.workReports) memoryStore.workReports = [];
-    memoryStore.workReports.unshift(newReport);
-    return res.status(201).json(newReport);
-  } catch (err) {
-    console.error("Create work report error:", err);
-    return res.status(500).json({ message: "Failed to submit work report" });
+  if (getDbConnected()) {
+    try {
+      savedReport = await WorkReport.create(newReport);
+    } catch (err) {
+      console.warn("Create work report DB fallback:", err.message);
+    }
   }
+
+  if (!memoryStore.workReports) memoryStore.workReports = [];
+  memoryStore.workReports.unshift(savedReport || newReport);
+  persistStore();
+  return res.status(201).json(savedReport || newReport);
 });
 
 // PUT: Update Work Report (Employee edits & saves own report)
@@ -87,47 +90,53 @@ router.put("/:id", verifyToken, async (req, res) => {
     return res.status(400).json({ message: "No valid fields to update" });
   }
 
-  try {
-    if (getDbConnected()) {
+  if (getDbConnected()) {
+    try {
       const updated = await WorkReport.findByIdAndUpdate(id, patch, { new: true });
-      if (!updated) return res.status(404).json({ message: "Work report not found" });
-      return res.json(updated);
+      if (updated) {
+        const index = (memoryStore.workReports || []).findIndex((r) => r._id === id);
+        if (index !== -1) {
+          memoryStore.workReports[index] = {
+            ...memoryStore.workReports[index],
+            ...patch,
+            updatedAt: new Date().toISOString(),
+          };
+        }
+        persistStore();
+        return res.json(updated);
+      }
+    } catch (err) {
+      console.warn("Update work report DB fallback:", err.message);
     }
-
-    const index = (memoryStore.workReports || []).findIndex((r) => r._id === id);
-    if (index === -1) return res.status(404).json({ message: "Work report not found" });
-
-    memoryStore.workReports[index] = {
-      ...memoryStore.workReports[index],
-      ...patch,
-      updatedAt: new Date().toISOString(),
-    };
-    return res.json(memoryStore.workReports[index]);
-  } catch (err) {
-    console.error("Update work report error:", err);
-    return res.status(500).json({ message: "Failed to update work report" });
   }
+
+  const index = (memoryStore.workReports || []).findIndex((r) => r._id === id);
+  if (index === -1) return res.status(404).json({ message: "Work report not found" });
+
+  memoryStore.workReports[index] = {
+    ...memoryStore.workReports[index],
+    ...patch,
+    updatedAt: new Date().toISOString(),
+  };
+  persistStore();
+  return res.json(memoryStore.workReports[index]);
 });
 
 // DELETE: Remove Work Report (Employee can delete own report)
 router.delete("/:id", verifyToken, async (req, res) => {
   const { id } = req.params;
-  try {
-    if (getDbConnected()) {
-      const deleted = await WorkReport.findByIdAndDelete(id);
-      if (!deleted) return res.status(404).json({ message: "Work report not found" });
-      return res.json({ message: "Work report deleted successfully" });
+
+  if (getDbConnected()) {
+    try {
+      await WorkReport.findByIdAndDelete(id);
+    } catch (err) {
+      console.warn("Delete work report DB fallback:", err.message);
     }
-
-    const index = (memoryStore.workReports || []).findIndex((r) => r._id === id);
-    if (index === -1) return res.status(404).json({ message: "Work report not found" });
-
-    memoryStore.workReports.splice(index, 1);
-    return res.json({ message: "Work report deleted successfully" });
-  } catch (err) {
-    console.error("Delete work report error:", err);
-    return res.status(500).json({ message: "Failed to delete work report" });
   }
+
+  memoryStore.workReports = (memoryStore.workReports || []).filter((r) => r._id !== id);
+  persistStore();
+  return res.json({ message: "Work report deleted successfully" });
 });
 
 export default router;

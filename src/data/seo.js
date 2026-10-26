@@ -78,7 +78,7 @@ export const SEO_BY_PATH = {
   "/careers": {
     title: "Careers — Join Nexprobyte, Software & Marketing Company Coimbatore",
     description:
-      "Browse open careers at Nexprobyte Technologies Coimbatore — frontend developer, WordPress, UI/UX, digital marketing specialist and SEO analyst roles.",
+      "Browse open careers at Nexprobyte Technologies Coimbatore — frontend developer, full stack developer, UI/UX designer, digital marketing specialist and SEO analyst roles.",
     keywords: "jobs Coimbatore, software company careers Coimbatore, digital marketing jobs Coimbatore",
   },
   "/contact": {

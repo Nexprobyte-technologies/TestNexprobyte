@@ -11,7 +11,7 @@ let pool = null;
 const DEFAULT_PG_URI =
   process.env.DATABASE_URL ||
   process.env.PG_URI ||
-  "postgres://postgres:postgres@localhost:5432/nexprobyte";
+  "postgres://postgres:root1234@localhost:5432/nexprobyte";
 
 function parsePgUri(uri = DEFAULT_PG_URI) {
   try {

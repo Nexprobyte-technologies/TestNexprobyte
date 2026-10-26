@@ -1,7 +1,7 @@
 import express from "express";
 import { Application } from "../models/Application.js";
 import { verifyToken } from "../middleware/auth.js";
-import { getDbConnected, memoryStore } from "../store/memoryStore.js";
+import { getDbConnected, memoryStore, persistStore } from "../store/memoryStore.js";
 
 const router = express.Router();
 
@@ -45,17 +45,21 @@ router.post("/", async (req, res) => {
     createdAt: new Date().toISOString(),
   };
 
+  let savedApp = newApp;
+
   if (getDbConnected()) {
     try {
-      const doc = await Application.create(newApp);
-      return res.status(201).json({ message: "Application submitted successfully!", application: doc });
+      savedApp = await Application.create(newApp);
     } catch (e) {
-      console.error(e);
+      console.warn("Application DB fallback:", e.message);
     }
   }
 
-  memoryStore.applications.unshift(newApp);
-  return res.status(201).json({ message: "Application submitted successfully!", application: newApp });
+  if (!memoryStore.applications) memoryStore.applications = [];
+  memoryStore.applications.unshift(savedApp || newApp);
+  persistStore();
+
+  return res.status(201).json({ message: "Application submitted successfully!", application: savedApp || newApp });
 });
 
 // Get Applications (GET /api/applications - Admin Protected)
@@ -63,12 +67,12 @@ router.get("/", verifyToken, async (req, res) => {
   if (getDbConnected()) {
     try {
       const docs = await Application.find().sort({ createdAt: -1 });
-      return res.json(docs);
+      if (docs && docs.length > 0) return res.json(docs);
     } catch (e) {
       console.error(e);
     }
   }
-  return res.json(memoryStore.applications);
+  return res.json(memoryStore.applications || []);
 });
 
 // Update Application Status (PUT /api/applications/:id - Admin Protected)
@@ -79,15 +83,21 @@ router.put("/:id", verifyToken, async (req, res) => {
   if (getDbConnected()) {
     try {
       const doc = await Application.findByIdAndUpdate(id, { status }, { new: true });
-      return res.json(doc);
+      if (doc) {
+        const appItem = (memoryStore.applications || []).find((a) => a._id === id || a.id === id);
+        if (appItem) appItem.status = status;
+        persistStore();
+        return res.json(doc);
+      }
     } catch (e) {
       console.error(e);
     }
   }
 
-  const appItem = memoryStore.applications.find((a) => a._id === id || a.id === id);
+  const appItem = (memoryStore.applications || []).find((a) => a._id === id || a.id === id);
   if (appItem) {
     appItem.status = status;
+    persistStore();
     return res.json(appItem);
   }
   return res.status(404).json({ message: "Application not found." });
@@ -100,13 +110,13 @@ router.delete("/:id", verifyToken, async (req, res) => {
   if (getDbConnected()) {
     try {
       await Application.findByIdAndDelete(id);
-      return res.json({ message: "Application deleted successfully." });
     } catch (e) {
       console.error(e);
     }
   }
 
-  memoryStore.applications = memoryStore.applications.filter((a) => a._id !== id && a.id !== id);
+  memoryStore.applications = (memoryStore.applications || []).filter((a) => a._id !== id && a.id !== id);
+  persistStore();
   return res.json({ message: "Application deleted successfully." });
 });
 

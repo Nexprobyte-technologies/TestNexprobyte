@@ -1,6 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { FadeIn } from "./Reveal.jsx";
+import Magnetic from "./reactbits/Magnetic.jsx";
+import ShinyText from "./reactbits/ShinyText.jsx";
 
 const COMPANY = [
   { label: "Home", to: "/" },
@@ -30,8 +32,10 @@ const SOCIALS = [
 
 export function Footer() {
   return (
-    <footer className="footer wrap">
-      <div className="footer-grid">
+    <footer className="footer">
+      <div className="footer-ambient-glow" />
+      <div className="wrap">
+        <div className="footer-grid">
         <FadeIn>
           <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "16px" }}>
             <img
@@ -47,16 +51,17 @@ export function Footer() {
           </p>
           <div className="socials">
             {SOCIALS.map((s) => (
-              <a
-                key={s.key}
-                href={s.href}
-                target={s.href.startsWith("http") ? "_blank" : undefined}
-                rel={s.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                className="social"
-                aria-label={`${s.label} profile`}
-              >
-                {s.key}
-              </a>
+              <Magnetic key={s.key} strength={14} radius={50}>
+                <a
+                  href={s.href}
+                  target={s.href.startsWith("http") ? "_blank" : undefined}
+                  rel={s.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                  className="social"
+                  aria-label={`${s.label} profile`}
+                >
+                  {s.key}
+                </a>
+              </Magnetic>
             ))}
           </div>
         </FadeIn>
@@ -85,13 +90,13 @@ export function Footer() {
 
         <FadeIn delay={0.24}>
           <h4>Get In Touch</h4>
-          <ul style={{ gap: 18 }}>
+          <ul style={{ gap: 10 }}>
             <li>
               <a
                 href="https://maps.google.com/?q=+10.9994017,76.9686834"
                 target="_blank"
                 rel="noreferrer"
-                style={{ lineHeight: 1.6 }}
+                style={{ lineHeight: 1.45, fontSize: "13px" }}
               >
                 1st Floor, Nanjiammal Complex, Above City Bakery, Maniyakarampalayam, Coimbatore,
                 Tamil Nadu 641006
@@ -125,11 +130,12 @@ export function Footer() {
         </a>
       </div>
 
-      <div className="base">
-        <span style={{ alignSelf: "center" }}>
-          Copyright © 2026 Nexprobyte Technologies. All rights reserved.
-        </span>
-        <span style={{ alignSelf: "center" }}>Made with Motion in Coimbatore ✦</span>
+        <div className="base">
+          <span style={{ alignSelf: "center" }}>
+            Copyright © 2026 <ShinyText style={{ fontWeight: 700 }}>Nexprobyte Technologies</ShinyText>. All rights reserved.
+          </span>
+          <span style={{ alignSelf: "center" }}>Made with Motion in Coimbatore</span>
+        </div>
       </div>
     </footer>
   );

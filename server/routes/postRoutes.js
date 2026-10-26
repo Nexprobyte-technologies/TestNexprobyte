@@ -1,6 +1,6 @@
 import express from "express";
 import { verifyToken } from "../middleware/auth.js";
-import { memoryStore, getDbConnected } from "../store/memoryStore.js";
+import { memoryStore, getDbConnected, persistStore } from "../store/memoryStore.js";
 import { Post } from "../models/Post.js";
 
 const router = express.Router();
@@ -76,17 +76,20 @@ router.post("/", verifyToken, async (req, res) => {
     createdAt: new Date().toISOString(),
   };
 
+  let savedPost = newPost;
+
   if (getDbConnected()) {
     try {
-      const doc = await Post.create(newPost);
-      return res.status(201).json(doc);
+      savedPost = await Post.create(newPost);
     } catch (e) {
-      console.error(e);
+      console.warn("Post create fallback in DB:", e.message);
     }
   }
 
-  memoryStore.posts.unshift(newPost);
-  return res.status(201).json(newPost);
+  if (!memoryStore.posts) memoryStore.posts = [];
+  memoryStore.posts.unshift(savedPost || newPost);
+  persistStore();
+  return res.status(201).json(savedPost || newPost);
 });
 
 // Update Blog Post (Admin Protected)
@@ -97,15 +100,21 @@ router.put("/:id", verifyToken, async (req, res) => {
   if (getDbConnected()) {
     try {
       const doc = await Post.findByIdAndUpdate(id, updates, { new: true });
-      if (doc) return res.json(doc);
+      if (doc) {
+        const index = (memoryStore.posts || []).findIndex((p) => p._id === id || p.id === id || p.slug === id);
+        if (index !== -1) memoryStore.posts[index] = { ...memoryStore.posts[index], ...updates };
+        persistStore();
+        return res.json(doc);
+      }
     } catch (e) {
-      console.error(e);
+      console.warn("Post update fallback in DB:", e.message);
     }
   }
 
-  const index = memoryStore.posts.findIndex((p) => p._id === id || p.id === id || p.slug === id);
+  const index = (memoryStore.posts || []).findIndex((p) => p._id === id || p.id === id || p.slug === id);
   if (index !== -1) {
     memoryStore.posts[index] = { ...memoryStore.posts[index], ...updates };
+    persistStore();
     return res.json(memoryStore.posts[index]);
   }
   return res.status(404).json({ message: "Post not found." });
@@ -118,13 +127,13 @@ router.delete("/:id", verifyToken, async (req, res) => {
   if (getDbConnected()) {
     try {
       await Post.findByIdAndDelete(id);
-      return res.json({ message: "Post deleted successfully." });
     } catch (e) {
-      console.error(e);
+      console.warn("Post delete fallback in DB:", e.message);
     }
   }
 
-  memoryStore.posts = memoryStore.posts.filter((p) => p._id !== id && p.id !== id && p.slug !== id);
+  memoryStore.posts = (memoryStore.posts || []).filter((p) => p._id !== id && p.id !== id && p.slug !== id);
+  persistStore();
   return res.json({ message: "Post deleted successfully." });
 });
 

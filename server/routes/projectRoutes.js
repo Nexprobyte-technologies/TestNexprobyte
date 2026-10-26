@@ -1,7 +1,7 @@
 import express from "express";
 import { Project } from "../models/Project.js";
 import { verifyToken } from "../middleware/auth.js";
-import { getDbConnected, memoryStore } from "../store/memoryStore.js";
+import { getDbConnected, memoryStore, persistStore } from "../store/memoryStore.js";
 
 const router = express.Router();
 
@@ -104,28 +104,26 @@ router.post("/", verifyToken, async (req, res) => {
     notes: notes || "",
   };
 
-  try {
-    if (getDbConnected()) {
+  let createdMemory = {
+    _id: `prj-${Date.now()}`,
+    ...newProjectData,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  };
+
+  if (getDbConnected()) {
+    try {
       const created = await Project.create(newProjectData);
-      return res.status(201).json(created);
+      if (created) createdMemory = created;
+    } catch (err) {
+      console.warn("Postgres create project fallback:", err.message);
     }
-
-    const createdMemory = {
-      _id: `prj-${Date.now()}`,
-      ...newProjectData,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
-
-    if (!memoryStore.projects) {
-      memoryStore.projects = [];
-    }
-    memoryStore.projects.unshift(createdMemory);
-    return res.status(201).json(createdMemory);
-  } catch (err) {
-    console.error("Create project error:", err);
-    return res.status(500).json({ message: "Failed to create project", error: err.message });
   }
+
+  if (!memoryStore.projects) memoryStore.projects = [];
+  memoryStore.projects.unshift(createdMemory);
+  persistStore();
+  return res.status(201).json(createdMemory);
 });
 
 // PUT: Update project
@@ -137,33 +135,41 @@ router.put("/:id", verifyToken, async (req, res) => {
     updates.techStack = updates.techStack.split(",").map((s) => s.trim()).filter(Boolean);
   }
 
-  try {
-    if (getDbConnected()) {
+  if (getDbConnected()) {
+    try {
       const updated = await Project.findOneAndUpdate(
         { $or: [{ _id: id.match(/^[0-9a-fA-F]{24}$/) ? id : null }, { projectId: id }] },
         { $set: updates },
         { new: true }
       );
-      if (!updated) return res.status(404).json({ message: "Project not found" });
-      return res.json(updated);
+      if (updated) {
+        const index = (memoryStore.projects || []).findIndex(
+          (p) => p._id === id || p.projectId === id
+        );
+        if (index !== -1) {
+          memoryStore.projects[index] = { ...memoryStore.projects[index], ...updates, updatedAt: new Date().toISOString() };
+        }
+        persistStore();
+        return res.json(updated);
+      }
+    } catch (err) {
+      console.warn("Postgres update project fallback:", err.message);
     }
-
-    const index = (memoryStore.projects || []).findIndex(
-      (p) => p._id === id || p.projectId === id
-    );
-    if (index === -1) return res.status(404).json({ message: "Project not found" });
-
-    memoryStore.projects[index] = {
-      ...memoryStore.projects[index],
-      ...updates,
-      updatedAt: new Date().toISOString(),
-    };
-
-    return res.json(memoryStore.projects[index]);
-  } catch (err) {
-    console.error("Update project error:", err);
-    return res.status(500).json({ message: "Failed to update project" });
   }
+
+  const index = (memoryStore.projects || []).findIndex(
+    (p) => p._id === id || p.projectId === id
+  );
+  if (index === -1) return res.status(404).json({ message: "Project not found" });
+
+  memoryStore.projects[index] = {
+    ...memoryStore.projects[index],
+    ...updates,
+    updatedAt: new Date().toISOString(),
+  };
+  persistStore();
+
+  return res.json(memoryStore.projects[index]);
 });
 
 // PATCH: Quick status & progress update
@@ -171,61 +177,66 @@ router.patch("/:id/status", verifyToken, async (req, res) => {
   const { id } = req.params;
   const { status, progress } = req.body;
 
-  try {
-    const updateObj = {};
-    if (status !== undefined) updateObj.status = status;
-    if (progress !== undefined) updateObj.progress = progress;
+  const updateObj = {};
+  if (status !== undefined) updateObj.status = status;
+  if (progress !== undefined) updateObj.progress = progress;
 
-    if (getDbConnected()) {
+  if (getDbConnected()) {
+    try {
       const updated = await Project.findOneAndUpdate(
         { $or: [{ _id: id.match(/^[0-9a-fA-F]{24}$/) ? id : null }, { projectId: id }] },
         { $set: updateObj },
         { new: true }
       );
-      if (!updated) return res.status(404).json({ message: "Project not found" });
-      return res.json(updated);
+      if (updated) {
+        const index = (memoryStore.projects || []).findIndex(
+          (p) => p._id === id || p.projectId === id
+        );
+        if (index !== -1) {
+          if (status !== undefined) memoryStore.projects[index].status = status;
+          if (progress !== undefined) memoryStore.projects[index].progress = progress;
+          memoryStore.projects[index].updatedAt = new Date().toISOString();
+        }
+        persistStore();
+        return res.json(updated);
+      }
+    } catch (err) {
+      console.warn("Postgres patch project status fallback:", err.message);
     }
-
-    const index = (memoryStore.projects || []).findIndex(
-      (p) => p._id === id || p.projectId === id
-    );
-    if (index === -1) return res.status(404).json({ message: "Project not found" });
-
-    if (status !== undefined) memoryStore.projects[index].status = status;
-    if (progress !== undefined) memoryStore.projects[index].progress = progress;
-    memoryStore.projects[index].updatedAt = new Date().toISOString();
-
-    return res.json(memoryStore.projects[index]);
-  } catch (err) {
-    return res.status(500).json({ message: "Failed to update status" });
   }
+
+  const index = (memoryStore.projects || []).findIndex(
+    (p) => p._id === id || p.projectId === id
+  );
+  if (index === -1) return res.status(404).json({ message: "Project not found" });
+
+  if (status !== undefined) memoryStore.projects[index].status = status;
+  if (progress !== undefined) memoryStore.projects[index].progress = progress;
+  memoryStore.projects[index].updatedAt = new Date().toISOString();
+  persistStore();
+
+  return res.json(memoryStore.projects[index]);
 });
 
 // DELETE: Delete project
 router.delete("/:id", verifyToken, async (req, res) => {
   const { id } = req.params;
-  try {
-    if (getDbConnected()) {
-      const deleted = await Project.findOneAndDelete({
+
+  if (getDbConnected()) {
+    try {
+      await Project.findOneAndDelete({
         $or: [{ _id: id.match(/^[0-9a-fA-F]{24}$/) ? id : null }, { projectId: id }],
       });
-      if (!deleted) return res.status(404).json({ message: "Project not found" });
-      return res.json({ message: "Project deleted successfully" });
+    } catch (err) {
+      console.warn("Postgres delete project fallback:", err.message);
     }
-
-    const initialLen = (memoryStore.projects || []).length;
-    memoryStore.projects = (memoryStore.projects || []).filter(
-      (p) => p._id !== id && p.projectId !== id
-    );
-
-    if (memoryStore.projects.length === initialLen) {
-      return res.status(404).json({ message: "Project not found" });
-    }
-
-    return res.json({ message: "Project deleted successfully" });
-  } catch (err) {
-    return res.status(500).json({ message: "Failed to delete project" });
   }
+
+  memoryStore.projects = (memoryStore.projects || []).filter(
+    (p) => p._id !== id && p.projectId !== id
+  );
+  persistStore();
+  return res.json({ message: "Project deleted successfully" });
 });
 
 export default router;
