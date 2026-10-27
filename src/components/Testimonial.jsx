@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "motion/react";
 import { FadeIn } from "./Reveal.jsx";
+import { PlatformRatings } from "./PlatformRatings.jsx";
 
 const EASE = [0.22, 1, 0.36, 1];
 
@@ -98,27 +99,17 @@ export function Testimonial() {
             </h2>
           </div>
 
-          {/* Rating Badge */}
-          <div className="reviews-rating-badge">
-            <div className="rating-g-icon">G</div>
+          <div className="reviews-verified-pill">
+            <div className="verified-pill-dot"></div>
             <div>
-              <div className="rating-score-row">
-                <span className="rating-score">4.9/5</span>
-                <span className="rating-stars">
-                  {[1, 2, 3, 4, 5].map((s) => (
-                    <StarIcon key={s} filled={true} />
-                  ))}
-                </span>
-              </div>
-              <div className="rating-sub">from 120+ reviews • Google • Verified</div>
-            </div>
-            <div className="rating-divider-line"></div>
-            <div className="rating-locations">
-              Coimbatore • Tirupur <br />
-              Chennai • Salem • Erode • Madurai
+              <div className="verified-pill-score">4.9/5 Overall Rating</div>
+              <div className="verified-pill-sub">Verified on Google, Clutch, Justdial & Facebook</div>
             </div>
           </div>
         </div>
+
+        {/* Platform Ratings Options (Google, Clutch, Justdial, Facebook, Trustpilot) */}
+        <PlatformRatings />
 
         <div className="reviews-sub-note">
           <span className="sub-note-badge">Tanglish reviews • Real clients • Verified business outcomes</span>
